@@ -1,5 +1,5 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUser, LuEdit } from "react-icons/lu";
-
 
 const AdminEditUser = () => {
   return (
@@ -80,6 +80,6 @@ const AdminEditUser = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminEditUser
+export default AdminEditUser;

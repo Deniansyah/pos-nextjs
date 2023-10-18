@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { LuShoppingBag, LuSettings, LuLogOut, LuArrowRightLeft, LuEdit } from "react-icons/lu";
 
 const CashierProfile = () => {
@@ -85,6 +85,6 @@ const CashierProfile = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CashierProfile
+export default CashierProfile;

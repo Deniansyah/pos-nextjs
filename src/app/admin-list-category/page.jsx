@@ -1,5 +1,5 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight, LuLayoutGrid } from "react-icons/lu";
-
 
 const AdminListCategory = () => {
   // Dummy data
@@ -154,6 +154,6 @@ const AdminListCategory = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminListCategory
+export default AdminListCategory;

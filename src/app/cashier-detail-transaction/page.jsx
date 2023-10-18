@@ -1,4 +1,3 @@
-'use client'
 import { LuShoppingBag, LuSettings, LuLogOut, LuArrowRightLeft } from "react-icons/lu";
 
 const CashierDetailTransaction = () => {

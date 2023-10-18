@@ -1,5 +1,5 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid } from "react-icons/lu";
-
 
 const AdminInsertCategory = () => {
   return (
@@ -56,6 +56,6 @@ const AdminInsertCategory = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminInsertCategory
+export default AdminInsertCategory;

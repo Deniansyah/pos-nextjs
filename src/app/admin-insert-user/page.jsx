@@ -1,3 +1,4 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUser } from "react-icons/lu";
 
 const AdminInsertUser = () => {

@@ -1,47 +1,46 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight, LuLayoutGrid, LuUser } from "react-icons/lu";
-
 
 const AdminListUsers = () => {
   // Dummy data
-const users = [
-  {
-    id: 1,
-    picture: "user1.jpg",
-    name: "User 1",
-    email: "user1@example.com",
-    role: "Admin",
-  },
-  {
-    id: 2,
-    picture: "user2.jpg",
-    name: "User 2",
-    email: "user2@example.com",
-    role: "User",
-  },
-  {
-    id: 3,
-    picture: "user3.jpg",
-    name: "User 3",
-    email: "user3@example.com",
-    role: "User",
-  },
-  {
-    id: 4,
-    picture: "user4.jpg",
-    name: "User 4",
-    email: "user4@example.com",
-    role: "User",
-  },
-  {
-    id: 5,
-    picture: "user5.jpg",
-    name: "User 5",
-    email: "user5@example.com",
-    role: "User",
-  },
-  // Add more dummy data as needed
-];
-
+  const users = [
+    {
+      id: 1,
+      picture: "user1.jpg",
+      name: "User 1",
+      email: "user1@example.com",
+      role: "Admin",
+    },
+    {
+      id: 2,
+      picture: "user2.jpg",
+      name: "User 2",
+      email: "user2@example.com",
+      role: "User",
+    },
+    {
+      id: 3,
+      picture: "user3.jpg",
+      name: "User 3",
+      email: "user3@example.com",
+      role: "User",
+    },
+    {
+      id: 4,
+      picture: "user4.jpg",
+      name: "User 4",
+      email: "user4@example.com",
+      role: "User",
+    },
+    {
+      id: 5,
+      picture: "user5.jpg",
+      name: "User 5",
+      email: "user5@example.com",
+      role: "User",
+    },
+    // Add more dummy data as needed
+  ];
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -183,6 +182,6 @@ const users = [
       </div>
     </div>
   );
-}
+};
 
-export default AdminListUsers
+export default AdminListUsers;

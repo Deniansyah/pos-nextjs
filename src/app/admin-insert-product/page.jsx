@@ -1,3 +1,4 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut } from "react-icons/lu";
 
 const AdminInsertProduct = () => {

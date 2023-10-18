@@ -1,5 +1,5 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuSearch, LuPlus, LuExternalLink, LuChevronLeft, LuChevronRight, LuLayoutGrid, LuUser, LuArrowRightLeft } from "react-icons/lu";
-
 
 const AdminListTransaction = () => {
   // Dummy data
@@ -41,7 +41,6 @@ const AdminListTransaction = () => {
     },
     // Add more dummy data as needed
   ];
-
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -176,6 +175,6 @@ const AdminListTransaction = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminListTransaction
+export default AdminListTransaction;

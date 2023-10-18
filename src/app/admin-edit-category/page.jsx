@@ -1,3 +1,4 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid } from "react-icons/lu";
 
 const AdminEditCategory = () => {
@@ -55,6 +56,6 @@ const AdminEditCategory = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminEditCategory
+export default AdminEditCategory;

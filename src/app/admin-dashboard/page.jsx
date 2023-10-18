@@ -1,4 +1,3 @@
-'use client'
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUser, LuArrowRightLeft, LuArrowUp, LuArrowDown, LuDollarSign, LuBookmarkMinus, LuUsers } from "react-icons/lu";
 
 const AdminDashboard = () => {

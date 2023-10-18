@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import bg from "../../../public/bg.jpg";
 
@@ -35,7 +36,9 @@ const login = () => {
           <input type="password" placeholder="Insert your password" className="input input-bordered w-full" />
         </div>
         <button className="btn btn-warning mt-7 w-1/2">Login</button>
-        <p className="text-gray-400 mt-10">Not Registered Yet? <span className="text-warning">Create an ccount</span></p>
+        <p className="text-gray-400 mt-10">
+          Not Registered Yet? <span className="text-warning">Create an ccount</span>
+        </p>
       </div>
     </div>
   );

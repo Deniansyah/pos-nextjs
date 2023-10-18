@@ -1,5 +1,5 @@
+"use client";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuEdit } from "react-icons/lu";
-
 
 const AdminEditProduct = () => {
   return (
@@ -54,15 +54,7 @@ const AdminEditProduct = () => {
                 </div>
                 <div>
                   <p>Description :</p>
-                  <textarea
-                    className="focus:outline-none p-2 border border-black rounded-sm"
-                    name="description"
-                    id="description"
-                    placeholder="Description Product"
-                    cols="50"
-                    rows="5"
-                    defaultValue="Description product 1"
-                    />
+                  <textarea className="focus:outline-none p-2 border border-black rounded-sm" name="description" id="description" placeholder="Description Product" cols="50" rows="5" defaultValue="Description product 1" />
                 </div>
               </div>
             </div>
@@ -76,6 +68,6 @@ const AdminEditProduct = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminEditProduct
+export default AdminEditProduct;

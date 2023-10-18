@@ -1,5 +1,5 @@
+"use client";
 import { LuShoppingBag, LuSettings, LuLogOut, LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuArrowRightLeft, LuPencil, LuTrash } from "react-icons/lu";
-
 
 const CashierListTransaction = () => {
   // Dummy data
@@ -169,6 +169,6 @@ const CashierListTransaction = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CashierListTransaction
+export default CashierListTransaction;
