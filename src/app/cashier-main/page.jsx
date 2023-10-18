@@ -1,10 +1,10 @@
 import { LuShoppingBag, LuCreditCard, LuSettings, LuLogOut, LuSearch, LuX, LuPlus, LuMinus } from "react-icons/lu";
 
-const Main = () => {
+const CashierMain = () => {
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
       {/* sidebar */}
-      <div className="flex flex-col fixed h-screen gap-10 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
+      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
         <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
           <LuShoppingBag className="text-2xl" />
           <p>Market</p>
@@ -243,4 +243,4 @@ const Main = () => {
   );
 }
 
-export default Main
+export default CashierMain
