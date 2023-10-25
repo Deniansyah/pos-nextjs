@@ -1,32 +1,17 @@
 "use client";
-import { LuShoppingBag, LuCreditCard, LuSettings, LuLogOut, LuSearch, LuX, LuPlus, LuMinus } from "react-icons/lu";
+import { LuSearch, LuX, LuPlus, LuMinus } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import SidebarCashier from "../../components/SidebarCashier";
 
 const CashierMain = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[1];
+
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      {/* sidebar */}
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuShoppingBag className="text-2xl" />
-          <p>Market</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuCreditCard className="text-2xl" />
-          <p>Sales</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
+      <SidebarCashier path={currentPath} />
       {/* isi */}
-      <div className="pl-32 my-5 w-[100%]">
+      <div className="pl-24 mt-5 w-full">
         <div className="flex gap-10">
           <div>
             <h1 className="text-xl font-bold">Point of Sale</h1>
@@ -145,7 +130,7 @@ const CashierMain = () => {
         </div>
       </div>
       {/* aside */}
-      <div className="bg-white fixed w-[26%] h-screen right-0 rounded-l-2xl p-2">
+      <div className="bg-white fixed h-screen right-0 rounded-l-2xl p-2 w-[27.5%]">
         <h1 className="text-2xl font-bold px-3">Order list</h1>
         <p className="text-gray-400 px-3">#08098999917</p>
         <h3 className="font-bold px-3">Items :</h3>

@@ -1,7 +1,13 @@
 "use client";
-import { LuShoppingBag, LuSettings, LuLogOut, LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuArrowRightLeft, LuPencil, LuTrash } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuPencil, LuTrash } from "react-icons/lu";
+import SidebarCashier from "../../components/SidebarCashier";
 
 const CashierListTransaction = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[2];
+
   // Dummy data
   const transactions = [
     {
@@ -44,28 +50,9 @@ const CashierListTransaction = () => {
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuShoppingBag className="text-2xl" />
-          <p>Market</p>
-        </button>
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuArrowRightLeft className="text-2xl" />
-          <p>Transaction</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
-      <div className="pl-32 my-5 w-screen">
-        <div className="flex gap-5 mb-5 mr-5">
+      <SidebarCashier path={currentPath} />
+      <div className="pl-24 my-5 w-screen">
+        <div className="flex gap-5 mb-5 mr-4">
           <div className="flex grow gap-3 border-2 rounded-md border-gray-400 py-2 px-3">
             <div className="relative flex gap-5 w-full">
               <LuSearch className="absolute text-2xl text-warning top-3 left-3" />
@@ -90,7 +77,7 @@ const CashierListTransaction = () => {
         <div className="mb-5">
           <p>Total Transactions : 5</p>
         </div>
-        <div className="mr-5 mb-5">
+        <div className="mr-4 mb-5">
           <table className="min-w-full">
             <thead>
               <tr>
@@ -110,12 +97,12 @@ const CashierListTransaction = () => {
                       <button size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>
-                      <button size="sm" className="flex justify-center items-center flex-col text-yellow-500">
+                      <Link href={'/cashier-edit-transaction'} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
                         <LuPencil className="w-5 h-5" /> Edit
-                      </button>
-                      <button size="sm" className="flex justify-center items-center flex-col text-blue-500">
+                      </Link>
+                      <Link href={'/cashier-detail-transaction'} size="sm" className="flex justify-center items-center flex-col text-blue-500">
                         <LuExternalLink className="w-5 h-5" /> Detail
-                      </button>
+                      </Link>
                     </div>
                   </td>
                   <td className="pr-6 py-4 bg-white border-b">{transaction.id}</td>
@@ -129,7 +116,7 @@ const CashierListTransaction = () => {
           </table>
         </div>
         {/* next prev page */}
-        <div className="flex justify-between items-center gap-5 mr-5">
+        <div className="flex justify-between items-center gap-5 mr-4">
           {/* Primary Color : #101540 */}
           <button
             // onClick={prevPage}

@@ -1,38 +1,19 @@
 "use client";
-import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import Sidebar from "../../components/Sidebar";
 
 const AdminInsertCategory = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[2];
+
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuHome className="text-2xl" />
-          <p>Home</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuArchive className="text-2xl" />
-          <p>Product</p>
-        </button>
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuLayoutGrid className="text-2xl" />
-          <p>Category</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
-      <div className="pl-32 my-5 w-screen">
+      <Sidebar path={currentPath} />
+      <div className="pl-24 my-5 w-screen">
         <div className="mb-5">
           <p className="text-2xl font-bold">Add New Category</p>
         </div>
-        <div className="mr-5 mb-5">
+        <div className="mr-4 mb-5">
           <table className="w-64">
             <thead>
               <tr>

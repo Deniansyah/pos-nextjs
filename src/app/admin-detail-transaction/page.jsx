@@ -1,41 +1,15 @@
-import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUser, LuArrowRightLeft } from "react-icons/lu";
+"use client";
+import { usePathname } from "next/navigation";
+import Sidebar from "../../components/Sidebar";
 
 const AdminDetailTransaction = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[2];
+
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuHome className="text-2xl" />
-          <p>Home</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuArchive className="text-2xl" />
-          <p>Product</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuLayoutGrid className="text-2xl" />
-          <p>Category</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuUser className="text-2xl" />
-          <p>Users</p>
-        </button>
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuArrowRightLeft className="text-2xl" />
-          <p>Transaction</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
-      <div className="pl-32 my-5 w-screen mr-4">
+      <Sidebar path={currentPath} />
+      <div className="pl-24 my-5 w-screen mr-4">
         <div className="mb-5">
           <p className="text-2xl font-bold">Detail Transaction - INV003</p>
         </div>

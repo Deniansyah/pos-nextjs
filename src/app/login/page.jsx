@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
 import bg from "../../../public/bg.jpg";
 
@@ -35,7 +36,7 @@ const login = () => {
           </label>
           <input type="password" placeholder="Insert your password" className="input input-bordered w-full" />
         </div>
-        <button className="btn btn-warning mt-7 w-1/2">Login</button>
+        <Link href={'/cashier-main'} className="btn btn-warning mt-7 w-1/2">Login</Link>
         <p className="text-gray-400 mt-10">
           Not Registered Yet? <span className="text-warning">Create an ccount</span>
         </p>

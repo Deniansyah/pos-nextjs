@@ -1,7 +1,13 @@
 "use client";
-import { LuHome, LuArchive, LuSettings, LuLogOut, LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight, LuLayoutGrid, LuUser } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight, LuLayoutGrid, LuUser } from "react-icons/lu";
+import Sidebar from "../../components/Sidebar";
 
 const AdminListUsers = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[2];
+
   // Dummy data
   const users = [
     {
@@ -44,36 +50,9 @@ const AdminListUsers = () => {
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuHome className="text-2xl" />
-          <p>Home</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuArchive className="text-2xl" />
-          <p>Product</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuLayoutGrid className="text-2xl" />
-          <p>Category</p>
-        </button>
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuUser className="text-2xl" />
-          <p>Users</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
-      <div className="pl-32 my-5 w-screen">
-        <div className="flex gap-5 mb-5 mr-5">
+      <Sidebar path={currentPath} />
+      <div className="pl-24 my-5 w-screen">
+        <div className="flex gap-5 mb-5 mr-4">
           <div className="flex grow gap-3 border-2 rounded-md border-gray-400 py-2 px-3">
             <div className="relative flex gap-5 w-full">
               <LuSearch className="absolute text-2xl text-warning top-3 left-3" />
@@ -96,10 +75,10 @@ const AdminListUsers = () => {
           </div>
         </div>
         <div className="flex gap-3 mb-5">
-          <button to="/add-product" className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
+          <Link href={'/admin-insert-user'} className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
             <LuPlus className="text-2xl" />
             <p>Add user</p>
-          </button>
+          </Link>
         </div>
         <div className="mb-5">
           <p>Total Users : 5</p>
@@ -121,9 +100,9 @@ const AdminListUsers = () => {
                 <tr key={user.id}>
                   <td className="px-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">
-                      <button size="sm" className="flex justify-center items-center flex-col text-yellow-500">
+                      <Link href={'/admin-edit-user'} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
                         <LuPencil className="w-5 h-5" /> Edit
-                      </button>
+                      </Link>
                       <button size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>

@@ -1,42 +1,20 @@
 "use client";
-import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUser, LuEdit } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import { LuEdit } from "react-icons/lu";
+import Sidebar from "../../components/Sidebar";
 
 const AdminEditUser = () => {
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[1].split("-")[2];
+
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <div className="flex flex-col fixed h-screen gap-10 w-28 px-4 py-5 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl">
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuHome className="text-2xl" />
-          <p>Home</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuArchive className="text-2xl" />
-          <p>Product</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuLayoutGrid className="text-2xl" />
-          <p>Category</p>
-        </button>
-        <button className="flex flex-col justify-center items-center bg-[#ecca73] rounded-xl p-3">
-          <LuUser className="text-2xl" />
-          <p>Users</p>
-        </button>
-        <button className="flex flex-col justify-center items-center text-gray-500">
-          <LuSettings className="text-2xl" />
-          <p>Setting</p>
-        </button>
-        <div className="flex flex-col justify-end items-center text-red-500 grow">
-          <button className="flex flex-col justce items-center">
-            <LuLogOut className="text-2xl" />
-            <p>Log out</p>
-          </button>
-        </div>
-      </div>
-      <div className="pl-32 my-5 w-screen">
+      <Sidebar path={currentPath} />
+      <div className="pl-24 my-5 w-screen">
         <div className="mb-5">
           <p className="text-2xl font-bold">Edit User</p>
         </div>
-        <div className="w-full min-h-[70%] p-5 flex flex-col gap-6">
+        <div className="w-full p-5 flex flex-col gap-6">
           <form>
             <div className="flex gap-5">
               <div className="flex flex-col gap-2 justify-center items-center">
