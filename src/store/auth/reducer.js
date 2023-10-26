@@ -51,6 +51,8 @@ const authSlice = createSlice({
           data: action.payload.data,
           role: action.payload.role,
           isAuthenticated: true,
+          isError: false,
+          errorMessage: null,
         };
       }),
       builder.addCase(loginThunk.rejected, (state, action) => {
