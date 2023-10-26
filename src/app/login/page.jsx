@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authAction } from "../../store/auth/reducer";
 import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 const Login = () => {
   const router = useRouter();
@@ -15,11 +16,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const isError = useSelector((state) => state.auth.isError);
   const message = useSelector((state) => state.auth.errorMessage);
-
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (isAuthenticated) {
-    redirect("/cashier-main");
-  }
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect("/cashier-main");
+    }
+  },[])
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
