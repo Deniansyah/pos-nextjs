@@ -1,11 +1,23 @@
 "use client";
 import { LuSearch, LuX, LuPlus, LuMinus } from "react-icons/lu";
+import { useSelector } from "react-redux";
+import { redirect } from "next/navigation";
 import { usePathname } from "next/navigation";
 import SidebarCashier from "../../components/SidebarCashier";
 
 const CashierMain = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[1];
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  if (!isAuthenticated) {
+    redirect("/login");
+  }
+
+  const role = useSelector((state) => state.auth.role);
+  if (role === 1) {
+    redirect('/admin-dashboard')
+  }
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">

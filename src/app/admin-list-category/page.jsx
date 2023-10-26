@@ -1,12 +1,24 @@
 "use client";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import Sidebar from "../../components/Sidebar";
 
 const AdminListCategory = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  if (!isAuthenticated) {
+    redirect("/login");
+  }
+
+  const role = useSelector((state) => state.auth.role);
+  if (role === 2) {
+    redirect("/cashier-main");
+  }
 
   // Dummy data
   const category = [

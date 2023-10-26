@@ -1,12 +1,24 @@
 "use client";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { redirect } from "next/navigation";
 import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuPencil, LuTrash } from "react-icons/lu";
 import SidebarCashier from "../../components/SidebarCashier";
 
 const CashierListTransaction = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  if (!isAuthenticated) {
+    redirect("/login");
+  }
+
+  const role = useSelector((state) => state.auth.role);
+  if (role === 1) {
+    redirect("/admin-dashboard");
+  }
 
   // Dummy data
   const transactions = [
