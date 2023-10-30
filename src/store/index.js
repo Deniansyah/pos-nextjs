@@ -1,5 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { authReducer } from "./auth/reducer"
+import { productReducer } from "./product/reducer";
+import { categoriesReducer } from "./categories/reducer";
 import { 
   persistStore,
   persistReducer,
@@ -14,7 +16,9 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 const reducers = combineReducers({
   auth: authReducer,
-})
+  product: productReducer,
+  categories: categoriesReducer,
+});
 
 const createNoopStorage = () => {
   return {
