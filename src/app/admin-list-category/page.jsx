@@ -1,49 +1,58 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { useEffect, useState } from "react";
+import { categoriesAction } from "../../store/categories/reducer";
+import { useDispatch, useSelector } from "react-redux";
+import http from "../../helpers/http";
 import Sidebar from "../../components/Sidebar";
 
 const AdminListCategory = () => {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+  const token = useSelector((state) => state.auth.data);
+  const [del, setDel] = useState(false);
+  const [query, setQuery] = useState({
+    page: 1,
+    limit: 5,
+    searchBy: "name",
+    search: "",
+    sortBy: "createdAt",
+    sort: "ASC",
+  });
+
+  const categories = useSelector((state) => state.categories);
+  const data = categories.data.results;
+
+  useEffect(() => {
+    dispatch(categoriesAction.getCategoriesThunk(query));
+    setDel(false);
+  }, [dispatch, del, query]);
+
+  const deleteCategories = async (id) => {
+    try {
+      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories/${id}`);
+      alert("delete categories succes");
+      setDel(true);
+      console.log(response);
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     redirect("/login");
   }
-
   const role = useSelector((state) => state.auth.role);
   if (role === 2) {
     redirect("/cashier-main");
   }
-
-  // Dummy data
-  const category = [
-    {
-      id: 1,
-      name: "Category 1",
-    },
-    {
-      id: 2,
-      name: "Category 2",
-    },
-    {
-      id: 3,
-      name: "Category 3",
-    },
-    {
-      id: 4,
-      name: "Category 4",
-    },
-    {
-      id: 5,
-      name: "Category 5",
-    },
-    // Add more dummy data as needed
-  ];
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -71,32 +80,32 @@ const AdminListCategory = () => {
           </div>
         </div>
         <div className="flex gap-3 mb-5">
-          <Link href={'/admin-insert-category'} className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
+          <Link href={"/admin-insert-category"} className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
             <LuPlus className="text-2xl" />
             <p>Add category</p>
           </Link>
         </div>
         <div className="mb-5">
-          <p>Total Category : 5</p>
+          <p>Total Category : {categories?.data?.pageInfo?.totalData}</p>
         </div>
         <div className="mr-5 mb-5">
           <table className="min-w-full">
             <thead>
               <tr>
-                <th className="px-6 py-3 bg-gray-400 text-left">Actions</th>
+                <th className="pl-6 py-3 bg-gray-400 text-left">Actions</th>
                 <th className="px-6 py-3 bg-gray-400 text-left">ID</th>
                 <th className="px-6 py-3 bg-gray-400 text-left">Name</th>
               </tr>
             </thead>
             <tbody>
-              {category.map((category) => (
+              {data?.map((category) => (
                 <tr key={category.id}>
-                  <td className="px-6 py-4 bg-white border-b">
+                  <td className="pl-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">
-                      <Link href={'/admin-edit-category'} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
+                      <Link href={"/admin-edit-category/" + category.id} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
                         <LuPencil className="w-5 h-5" /> Edit
                       </Link>
-                      <button size="sm" className="flex justify-center items-center flex-col text-red-500">
+                      <button onClick={() => deleteCategories(category.id)} size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>
                     </div>
@@ -133,8 +142,7 @@ const AdminListCategory = () => {
           <div className="flex justify-center items-center gap-3">
             <p>Halaman :</p>
             <p>
-              {/* {query.page}/{product?.data?.pageInfo?.totalPage} */}
-              1/1
+              {query.page}/{categories?.data?.pageInfo?.totalPage}
             </p>
           </div>
           <button
