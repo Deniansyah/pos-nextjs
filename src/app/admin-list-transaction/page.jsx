@@ -1,64 +1,41 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
-import { redirect } from "next/navigation";
-import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import Sidebar from "../../components/Sidebar";
+import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { transactionAction } from "../../store/transaction/reducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const AdminListTransaction = () => {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+  const [query, setQuery] = useState({
+    page: 1,
+    limit: 5,
+    searchBy: "name",
+    search: "",
+    sortBy: "createdAt",
+    sort: "ASC",
+  });
+
+  const transaction = useSelector((state) => state.transaction);
+  const data = transaction?.data?.results;
+
+  useEffect(() => {
+    dispatch(transactionAction.getTransactionThunk(query));
+  }, [dispatch, query]);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     redirect("/login");
   }
-
   const role = useSelector((state) => state.auth.role);
   if (role === 2) {
     redirect("/cashier-main");
   }
-
-  // Dummy data
-  const transactions = [
-    {
-      id: 1,
-      name: "Cashier 1",
-      invoice: "INV-001",
-      date: "2023-10-01",
-      total: "$100.00",
-    },
-    {
-      id: 2,
-      name: "Cashier 2",
-      invoice: "INV-002",
-      date: "2023-10-02",
-      total: "$75.50",
-    },
-    {
-      id: 3,
-      name: "Cashier 3",
-      invoice: "INV-003",
-      date: "2023-10-03",
-      total: "$50.25",
-    },
-    {
-      id: 4,
-      name: "Cashier 4",
-      invoice: "INV-004",
-      date: "2023-10-04",
-      total: "$125.75",
-    },
-    {
-      id: 5,
-      name: "Cashier 5",
-      invoice: "INV-005",
-      date: "2023-10-05",
-      total: "$90.20",
-    },
-    // Add more dummy data as needed
-  ];
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -87,7 +64,7 @@ const AdminListTransaction = () => {
           </div>
         </div>
         <div className="mb-5">
-          <p>Total Transactions : 5</p>
+          <p>Total Transactions : {transaction?.data?.pageInfo?.totalData}</p>
         </div>
         <div className="mr-4 mb-5">
           <table className="min-w-full">
@@ -102,11 +79,11 @@ const AdminListTransaction = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
+              {data?.map((transaction) => (
                 <tr key={transaction.id}>
                   <td className="px-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">
-                      <Link href={'/admin-detail-transaction'} size="sm" className="flex justify-center items-center flex-col text-blue-500">
+                      <Link href={"/admin-detail-transaction/" + transaction.id} size="sm" className="flex justify-center items-center flex-col text-blue-500">
                         <LuExternalLink className="w-5 h-5" /> Detail
                       </Link>
                     </div>
@@ -146,8 +123,7 @@ const AdminListTransaction = () => {
           <div className="flex justify-center items-center gap-3">
             <p>Halaman :</p>
             <p>
-              {/* {query.page}/{product?.data?.pageInfo?.totalPage} */}
-              1/1
+              {query.page}/{transaction?.data?.pageInfo?.totalPage}
             </p>
           </div>
           <button

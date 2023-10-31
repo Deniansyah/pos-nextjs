@@ -2,6 +2,8 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { authReducer } from "./auth/reducer"
 import { productReducer } from "./product/reducer";
 import { categoriesReducer } from "./categories/reducer";
+import { transactionReducer } from "./transaction/reducer";
+import { detailTransactionReducer } from "./detailTransaction/reducer";
 import { 
   persistStore,
   persistReducer,
@@ -18,6 +20,8 @@ const reducers = combineReducers({
   auth: authReducer,
   product: productReducer,
   categories: categoriesReducer,
+  transaction: transactionReducer,
+  detailTransaction: detailTransactionReducer,
 });
 
 const createNoopStorage = () => {
