@@ -1,11 +1,20 @@
-"use client"
+"use client";
 import Link from "next/link";
+import Image from "next/image";
+import profileDefault from "../../public/profileDefault.png";
+import http from "../helpers/http";
+import jwt_decode from "jwt-decode";
 import { LuHome, LuArchive, LuSettings, LuLogOut, LuLayoutGrid, LuUsers, LuArrowRightLeft } from "react-icons/lu";
 import { logout as LogoutAction } from "../store/auth/reducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.data);
+  const { id } = jwt_decode(token);
+  const [userDb, setUserDb] = useState({});
+  const role = useSelector((state) => state.auth.role);
 
   const dashboard = "dashboard";
   const transaction = "transaction";
@@ -14,12 +23,32 @@ const Sidebar = (props) => {
   const user = "user";
   const profile = "profile";
 
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    try {
+      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`);
+      setUserDb(response.data.results);
+    } catch (error) {
+      setUserDb({});
+    }
+  };
+
   const Logout = () => {
     dispatch(LogoutAction());
   };
 
   return (
-    <div className="group hover:w-40 hover:shadow-2xl hover:items-start flex flex-col fixed h-screen gap-3 w-20 px-4 py-5 hover:px-0 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl items-center z-10">
+    <div className="group hover:w-60 hover:shadow-2xl hover:items-start flex flex-col fixed h-screen gap-3 w-20 px-4 py-5 hover:px-0 border-r bg-[#fbbd23] rounded-tr-2xl rounded-br-2xl items-center z-10">
+      <div className="flex group-hover:px-3 justify-center items-center gap-3 text-gray-500 rounded-full group-hover:rounded-l-none w-12 group-hover:w-full group-hover:justify-start">
+        <Image src={userDb.picture === null ? profileDefault : userDb.picture} alt={userDb.name} className="w-11 h-11 group-hover:w-8 group-hover:h-8 rounded-full border-2 border-gray-500" />
+        <p className="hidden group-hover:block group-hover:pl-1">
+          {role === 1 ? "Admin, " : "Cashier, "}
+          {userDb.name}
+        </p>
+      </div>
       <Link
         href={"/admin-dashboard"}
         className={`flex group-hover:px-4 justify-center items-center gap-5 ${
@@ -89,6 +118,6 @@ const Sidebar = (props) => {
       </div>
     </div>
   );
-}
+};
 
-export default Sidebar
+export default Sidebar;
