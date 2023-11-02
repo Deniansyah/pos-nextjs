@@ -1,64 +1,60 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
+import profileDefault from "../../../public/profileDefault.png";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight, LuLayoutGrid, LuUser } from "react-icons/lu";
+import { useEffect, useState } from "react";
+import { usersAction } from "../../store/users/reducer";
+import { useDispatch, useSelector } from "react-redux";
+import http from "../../helpers/http";
 import Sidebar from "../../components/Sidebar";
 
 const AdminListUsers = () => {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+  const token = useSelector((state) => state.auth.data);
+  const [del, setDel] = useState(false);
+  const [query, setQuery] = useState({
+    page: 1,
+    limit: 5,
+    searchBy: "name",
+    search: "",
+    sortBy: "createdAt",
+    sort: "ASC",
+  });
+
+  const users = useSelector((state) => state.users);
+  const data = users.data.results;
+
+  useEffect(() => {
+    dispatch(usersAction.getUsersThunk(query));
+    setDel(false);
+  }, [dispatch, del, query]);
+
+  const deleteUsers = async (id) => {
+    try {
+      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`);
+      alert("delete users success");
+      setDel(true);
+      console.log(response);
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     redirect("/login");
   }
-
   const role = useSelector((state) => state.auth.role);
   if (role === 2) {
     redirect("/cashier-main");
   }
-
-  // Dummy data
-  const users = [
-    {
-      id: 1,
-      picture: "user1.jpg",
-      name: "User 1",
-      email: "user1@example.com",
-      role: "Admin",
-    },
-    {
-      id: 2,
-      picture: "user2.jpg",
-      name: "User 2",
-      email: "user2@example.com",
-      role: "User",
-    },
-    {
-      id: 3,
-      picture: "user3.jpg",
-      name: "User 3",
-      email: "user3@example.com",
-      role: "User",
-    },
-    {
-      id: 4,
-      picture: "user4.jpg",
-      name: "User 4",
-      email: "user4@example.com",
-      role: "User",
-    },
-    {
-      id: 5,
-      picture: "user5.jpg",
-      name: "User 5",
-      email: "user5@example.com",
-      role: "User",
-    },
-    // Add more dummy data as needed
-  ];
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -87,13 +83,13 @@ const AdminListUsers = () => {
           </div>
         </div>
         <div className="flex gap-3 mb-5">
-          <Link href={'/admin-insert-user'} className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
+          <Link href={"/admin-insert-user"} className="btn btn-success bg-green-500 text-white pl-2 px-3 py-2 rounded-lg flex items-center gap-1 w-fit">
             <LuPlus className="text-2xl" />
             <p>Add user</p>
           </Link>
         </div>
         <div className="mb-5">
-          <p>Total Users : 5</p>
+          <p>Total Users : {users?.data?.pageInfo?.totalData}</p>
         </div>
         <div className="mr-5 mb-5">
           <table className="min-w-full">
@@ -108,25 +104,25 @@ const AdminListUsers = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {data?.map((user) => (
                 <tr key={user.id}>
                   <td className="px-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">
-                      <Link href={'/admin-edit-user'} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
+                      <Link href={"/admin-edit-user/" + user.id} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
                         <LuPencil className="w-5 h-5" /> Edit
                       </Link>
-                      <button size="sm" className="flex justify-center items-center flex-col text-red-500">
+                      <button onClick={() => deleteUsers(user.id)} size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>
                     </div>
                   </td>
                   <td className="px-6 py-4 bg-white border-b">
-                    <img src={user.picture} alt={user.name} className="w-10 h-10 object-cover rounded-full" />
+                    <Image src={user.picture === null ? profileDefault : user.picture} alt={user.name} className="w-10 h-10 object-cover rounded-full" />
                   </td>
                   <td className="px-6 py-4 bg-white border-b">{user.id}</td>
                   <td className="px-6 py-4 bg-white border-b">{user.name}</td>
                   <td className="px-6 py-4 bg-white border-b">{user.email}</td>
-                  <td className="px-6 py-4 bg-white border-b">{user.role}</td>
+                  <td className="px-6 py-4 bg-white border-b">{user.role === 1 ? "Admin" : "Cashier"}</td>
                 </tr>
               ))}
             </tbody>
@@ -157,8 +153,7 @@ const AdminListUsers = () => {
           <div className="flex justify-center items-center gap-3">
             <p>Halaman :</p>
             <p>
-              {/* {query.page}/{product?.data?.pageInfo?.totalPage} */}
-              1/1
+              {query.page}/{users?.data?.pageInfo?.totalPage}
             </p>
           </div>
           <button

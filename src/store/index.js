@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { authReducer } from "./auth/reducer"
+import { usersReducer } from "./users/reducer"
 import { productReducer } from "./product/reducer";
 import { categoriesReducer } from "./categories/reducer";
 import { transactionReducer } from "./transaction/reducer";
@@ -18,6 +19,7 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 const reducers = combineReducers({
   auth: authReducer,
+  users: usersReducer,
   product: productReducer,
   categories: categoriesReducer,
   transaction: transactionReducer,
