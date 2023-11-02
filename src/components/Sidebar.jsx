@@ -107,7 +107,7 @@ const Sidebar = (props) => {
             : "text-gray-500 hover:bg-orange-400 rounded-full group-hover:rounded-l-none w-12 h-12 group-hover:w-full group-hover:justify-start"
         }`}>
         <LuSettings className="text-2xl" />
-        <p className="hidden group-hover:block">Profile</p>
+        <p className="hidden group-hover:block">Profile Setting</p>
       </Link>
       <div className="grow" />
       <div className="flex group-hover:px-4 justify-center items-center text-red-500 hover:bg-orange-400 rounded-full group-hover:rounded-l-none w-12 h-12 group-hover:w-full group-hover:justify-start">

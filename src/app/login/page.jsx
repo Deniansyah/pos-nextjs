@@ -102,9 +102,6 @@ const Login = () => {
             Login
           </button>
         </form>
-        <p className="text-gray-400 mt-10">
-          Not Registered Yet? <span className="text-warning">Create an ccount</span>
-        </p>
       </div>
     </div>
   );
