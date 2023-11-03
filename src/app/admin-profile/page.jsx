@@ -8,9 +8,9 @@ import { LuEdit } from "react-icons/lu";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import SidebarCashier from "../../components/SidebarCashier";
+import Sidebar from "../../components/Sidebar";
 
-const CashierProfile = () => {
+const AdminProfile = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[1];
   const token = useSelector((state) => state.auth.data);
@@ -65,7 +65,7 @@ const CashierProfile = () => {
         },
       });
       alert("Edit users success");
-      router.push("/cashier-main");
+      router.push("/admin-dashboard");
       console.log(data);
     } catch (err) {
       alert(err.message);
@@ -79,15 +79,15 @@ const CashierProfile = () => {
     redirect("/login");
   }
   const role = useSelector((state) => state.auth.role);
-  if (role === 1) {
-    redirect("/admin-dashboard");
+  if (role === 2) {
+    redirect("/cashier-main");
   }
 
   const isButtonDisabled = password === "";
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <SidebarCashier path={currentPath} />
+      <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="mb-5">
           <p className="text-2xl font-bold">Profile Setting</p>
@@ -139,4 +139,4 @@ const CashierProfile = () => {
   );
 };
 
-export default CashierProfile;
+export default AdminProfile;
