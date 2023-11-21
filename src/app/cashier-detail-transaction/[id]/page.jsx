@@ -6,23 +6,23 @@ import { useSelector, useDispatch } from "react-redux";
 import { detailTransactionAction } from "../../../store/detailTransaction/reducer";
 import moment from "moment";
 import http from "../../../helpers/http";
-import Sidebar from "../../../components/Sidebar";
+import SidebarCashier from "../../../components/SidebarCashier";
 
-const AdminDetailTransaction = ({ params }) => {
+const CashierDetailTransaction = ({ params }) => {
   const dispatch = useDispatch();
   const id = params.id;
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
   const token = useSelector((state) => state.auth.data);
   const [transaction, setTransaction] = useState({});
-  const [transaction_id] = useState(id)
+  const [transaction_id] = useState(id);
 
   const detailTransaction = useSelector((state) => state.detailTransaction);
   const data = detailTransaction?.data?.results;
 
   useEffect(() => {
     dispatch(detailTransactionAction.getDetailTransactionThunk(transaction_id));
-    getTransaction()
+    getTransaction();
   }, [dispatch]);
 
   const getTransaction = async () => {
@@ -49,13 +49,13 @@ const AdminDetailTransaction = ({ params }) => {
     redirect("/login");
   }
   const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier-main");
+  if (role === 1) {
+    redirect("/admin-dashboard");
   }
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
-      <Sidebar path={currentPath} />
+      <SidebarCashier path={currentPath} />
       <div className="pl-24 my-5 w-screen mr-4">
         <div className="mb-5">
           <p className="text-2xl font-bold">Detail Transaction - {transaction.invoice}</p>
@@ -84,4 +84,4 @@ const AdminDetailTransaction = ({ params }) => {
   );
 };
 
-export default AdminDetailTransaction;
+export default CashierDetailTransaction;

@@ -1,64 +1,70 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
-import { redirect } from "next/navigation";
 import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuPencil, LuTrash } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { transactionAction } from "../../store/transaction/reducer";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import Link from "next/link";
 import SidebarCashier from "../../components/SidebarCashier";
+import http from "../../helpers/http";
 
 const CashierListTransaction = () => {
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
+  const token = useSelector((state) => state.auth.data);
+  const [del, setDel] = useState(false);
+  const [query, setQuery] = useState({
+    page: 1,
+    limit: 5,
+    searchBy: "name",
+    search: "",
+    sortBy: "createdAt",
+    sort: "ASC",
+  });
 
+  const transaction = useSelector((state) => state.transaction);
+  const data = transaction?.data?.results;
+
+  useEffect(() => {
+    dispatch(transactionAction.getTransactionThunk(query));
+    setDel(false);
+  }, [dispatch, del, query]);
+
+  const deleteTransaction = async (id) => {
+    try {
+      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
+      alert("delete transaction success");
+      setDel(true);
+      console.log(response);
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  // Private route
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     redirect("/login");
   }
-
   const role = useSelector((state) => state.auth.role);
   if (role === 1) {
     redirect("/admin-dashboard");
   }
 
-  // Dummy data
-  const transactions = [
-    {
-      id: 1,
-      name: "Cashier 1",
-      invoice: "INV-001",
-      date: "2023-10-01",
-      total: "$100.00",
-    },
-    {
-      id: 2,
-      name: "Cashier 2",
-      invoice: "INV-002",
-      date: "2023-10-02",
-      total: "$75.50",
-    },
-    {
-      id: 3,
-      name: "Cashier 3",
-      invoice: "INV-003",
-      date: "2023-10-03",
-      total: "$50.25",
-    },
-    {
-      id: 4,
-      name: "Cashier 4",
-      invoice: "INV-004",
-      date: "2023-10-04",
-      total: "$125.75",
-    },
-    {
-      id: 5,
-      name: "Cashier 5",
-      invoice: "INV-005",
-      date: "2023-10-05",
-      total: "$90.20",
-    },
-    // Add more dummy data as needed
-  ];
+  // Converter Rupiah
+  const formatPrice = (price) => {
+    const formattedPrice = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
+
+    return formattedPrice;
+  };
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -87,14 +93,13 @@ const CashierListTransaction = () => {
           </div>
         </div>
         <div className="mb-5">
-          <p>Total Transactions : 5</p>
+          <p>Total Transactions : {transaction?.data?.pageInfo?.totalData}</p>
         </div>
         <div className="mr-4 mb-5">
           <table className="min-w-full">
             <thead>
               <tr>
                 <th className="pl-6 py-3 bg-gray-400 text-left">Actions</th>
-                <th className="pr-6 py-3 bg-gray-400 text-left">ID</th>
                 <th className="px-6 py-3 bg-gray-400 text-left">Cashier Name</th>
                 <th className="px-6 py-3 bg-gray-400 text-left">Invoice</th>
                 <th className="px-6 py-3 bg-gray-400 text-left">Date</th>
@@ -102,26 +107,25 @@ const CashierListTransaction = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
+              {data.map((transaction) => (
                 <tr key={transaction.id}>
                   <td className="pl-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">
-                      <button size="sm" className="flex justify-center items-center flex-col text-red-500">
+                      <button onClick={() => deleteTransaction(transaction.id)} size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>
-                      <Link href={'/cashier-edit-transaction'} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
+                      <Link href={"/cashier-edit-transaction/" + transaction.id} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
                         <LuPencil className="w-5 h-5" /> Edit
                       </Link>
-                      <Link href={'/cashier-detail-transaction'} size="sm" className="flex justify-center items-center flex-col text-blue-500">
+                      <Link href={"/cashier-detail-transaction/" + transaction.id} size="sm" className="flex justify-center items-center flex-col text-blue-500">
                         <LuExternalLink className="w-5 h-5" /> Detail
                       </Link>
                     </div>
                   </td>
-                  <td className="pr-6 py-4 bg-white border-b">{transaction.id}</td>
                   <td className="px-6 py-4 bg-white border-b">{transaction.name}</td>
                   <td className="px-6 py-4 bg-white border-b">{transaction.invoice}</td>
-                  <td className="px-6 py-4 bg-white border-b">{transaction.date}</td>
-                  <td className="px-6 py-4 bg-white border-b">{transaction.total}</td>
+                  <td className="px-6 py-4 bg-white border-b">{moment(transaction.date).format("LLLL")}</td>
+                  <td className="px-6 py-4 bg-white border-b">{formatPrice(transaction.total)}</td>
                 </tr>
               ))}
             </tbody>
@@ -152,8 +156,7 @@ const CashierListTransaction = () => {
           <div className="flex justify-center items-center gap-3">
             <p>Halaman :</p>
             <p>
-              {/* {query.page}/{product?.data?.pageInfo?.totalPage} */}
-              1/1
+              {query.page}/{transaction?.data?.pageInfo?.totalPage}
             </p>
           </div>
           <button

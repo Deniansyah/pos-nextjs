@@ -1,12 +1,13 @@
 "use client";
-import Link from "next/link";
-import Sidebar from "../../components/Sidebar";
 import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { transactionAction } from "../../store/transaction/reducer";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import Link from "next/link";
+import Sidebar from "../../components/Sidebar";
 
 const AdminListTransaction = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,16 @@ const AdminListTransaction = () => {
   if (role === 2) {
     redirect("/cashier-main");
   }
+
+  // Converter Rupiah
+  const formatPrice = (price) => {
+    const formattedPrice = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
+
+    return formattedPrice;
+  };
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -91,8 +102,8 @@ const AdminListTransaction = () => {
                   <td className="px-6 py-4 bg-white border-b">{transaction.id}</td>
                   <td className="px-6 py-4 bg-white border-b">{transaction.name}</td>
                   <td className="px-6 py-4 bg-white border-b">{transaction.invoice}</td>
-                  <td className="px-6 py-4 bg-white border-b">{transaction.date}</td>
-                  <td className="px-6 py-4 bg-white border-b">{transaction.total}</td>
+                  <td className="px-6 py-4 bg-white border-b">{moment(transaction.date).format("LLLL")}</td>
+                  <td className="px-6 py-4 bg-white border-b">{formatPrice(transaction.total)}</td>
                 </tr>
               ))}
             </tbody>
