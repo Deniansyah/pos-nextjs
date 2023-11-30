@@ -67,7 +67,7 @@ const AdminDetailTransaction = ({ params }) => {
             <p className="mb-3">Cashier Name : {transaction.name}</p>
             <div>
               <ul>
-                {data.map((product, index) => (
+                {data?.map((product, index) => (
                   <li key={index} className="mb-5 ml-5 border border-black rounded-md p-3 w-fit">
                     <p>Product Name : {product.product_name}</p>
                     <p>Product Price : {formatPrice(product.product_price)}</p>
