@@ -71,7 +71,7 @@ const AdminDashboard = () => {
               <p className="text-2xl font-bold">24,532</p>
             </div>
             <div>
-              <p>Total Dish Oredered</p>
+              <p>Total products ordered</p>
             </div>
           </div>
           <div className="bg-white p-3 rounded-lg flex flex-col gap-2 w-60">

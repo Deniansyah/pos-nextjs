@@ -39,20 +39,20 @@ const CashierMain = () => {
   const kategori = categories.data.results;
 
   useEffect(() => {
+    if (token) {
+      try {
+        const { id } = jwt_decode(token);
+        setId(id);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     dispatch(productAction.getProductThunk(query));
     dispatch(categoriesAction.getCategoriesThunk(query));
     setTotal(calculateTotal());
     updateDate();
   }, [dispatch, query, cart]);
-
-  if (token) {
-    try {
-      const { id } = jwt_decode(token);
-      setId(id);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
