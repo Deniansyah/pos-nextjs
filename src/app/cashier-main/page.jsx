@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productAction } from "../../store/product/reducer";
-import { categoriesAction } from "../../store/categories/reducer";
 import { useRouter } from "next/navigation";
 import http from "../../helpers/http";
 import jwt_decode from "jwt-decode";
@@ -21,22 +20,21 @@ const CashierMain = () => {
   const token = useSelector((state) => state.auth.data);
   const [id, setId] = useState("");
   const [currentDate, setCurrentDate] = useState("");
+  const [category, setCategory] = useState([]);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState({
     page: 1,
-    limit: 5,
+    limit: 6,
     searchBy: "name",
     search: "",
     sortBy: "createdAt",
     sort: "ASC",
+    categories_name: "",
   });
 
   const product = useSelector((state) => state.product);
   const data = product.data.results;
-
-  const categories = useSelector((state) => state.categories);
-  const kategori = categories.data.results;
 
   useEffect(() => {
     if (token) {
@@ -49,7 +47,7 @@ const CashierMain = () => {
     }
 
     dispatch(productAction.getProductThunk(query));
-    dispatch(categoriesAction.getCategoriesThunk(query));
+    getCategory();
     setTotal(calculateTotal());
     updateDate();
   }, [dispatch, query, cart]);
@@ -62,6 +60,18 @@ const CashierMain = () => {
   if (role === 1) {
     redirect("/admin-dashboard");
   }
+
+  const getCategory = async () => {
+    try {
+      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
+      const data = response.data.results;
+      setCategory(data);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
 
   const updateDate = () => {
     const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
@@ -158,6 +168,85 @@ const CashierMain = () => {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setQuery((prevData) => ({
+      ...prevData,
+      search: event.target.value,
+    }));
+    setQuery((prevData) => ({
+      ...prevData,
+      page: 1,
+    }));
+  };
+
+  const limit = (value) => {
+    if (value === "6") {
+      setQuery((prevData) => ({
+        ...prevData,
+        limit: 6,
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+    if (value === "10") {
+      setQuery((prevData) => ({
+        ...prevData,
+        limit: 10,
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+    if (value === "20") {
+      setQuery((prevData) => ({
+        ...prevData,
+        limit: 20,
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+    if (value === "30") {
+      setQuery((prevData) => ({
+        ...prevData,
+        limit: 30,
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+  };
+
+  const prevPage = () => {
+    setQuery((prevData) => ({
+      ...prevData,
+      page: query.page - 1,
+    }));
+  };
+
+  const nextPage = () => {
+    setQuery((prevData) => ({
+      ...prevData,
+      page: query.page + 1,
+    }));
+  };
+
+  const handleCategoryChange = (value) => {
+    setQuery((prevData) => ({
+      ...prevData,
+      categories_name: value,
+    }));
+    setQuery((prevData) => ({
+      ...prevData,
+      page: 1,
+    }));
+  };
+
   return (
     <>
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
@@ -207,22 +296,24 @@ const CashierMain = () => {
             </div>
             <div className="relative">
               <LuSearch className="absolute text-2xl text-warning top-3 left-3" />
-              <input className="h-full px-5 pl-12 rounded-xl w-[32rem] input input-bordered input-warning" type="text" placeholder="Search something..." />
+              <input onChange={handleSearchChange} className="h-full px-5 pl-12 rounded-xl w-[32rem] input input-bordered input-warning" type="text" placeholder="Search product..." />
             </div>
           </div>
           {/* Categoty */}
           <div className="flex gap-3 mt-5">
-            <button className="text-warning">All</button>
-            {kategori?.map((category) => (
-              <div key={category.id} className="border-l border-black pl-3 ">
-                <button>{category.name}</button>
+            <button onClick={() => handleCategoryChange("")} className={query.categories_name === "" ? "text-warning" : ""}>
+              All
+            </button>
+            {category?.map((cat) => (
+              <div key={cat.id} className="border-l border-black pl-3 ">
+                <button onClick={() => handleCategoryChange(cat.name)} className={query.categories_name === cat.name ? "text-warning" : ""}>{cat.name}</button>
               </div>
             ))}
           </div>
           {/* Choose */}
           <div className="mt-5 w-[70%]">
             <h2 className="text-lg font-bold mb-3">Choose something</h2>
-            <div className="flex gap-5 flex-wrap h-[25rem]">
+            <div className="flex gap-5 flex-wrap min-h-[25rem]">
               {data?.map((product) => (
                 <div key={product.id} className="flex gap-3 bg-white w-[48%] h-fit p-3 rounded-xl">
                   <div className="flex justify-center items-center">
@@ -241,21 +332,15 @@ const CashierMain = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between items-center gap-5 mr-3 mt-5">
-              {/* Primary Color : #101540 */}
-              <button
-                // onClick={prevPage}
-                // disabled={query.page === 1}
-                className="bg-gray-500 p-4 rounded-md text-white"
-                // {query.page === 1 ? "bg-gray-500 p-3 rounded-md text-white" : "bg-[#101540] p-3 rounded-md text-white"}
-              >
+            <div className="flex justify-between items-center gap-5 mr-3 my-5">
+              <button onClick={prevPage} disabled={query.page === 1} className={query.page === 1 ? "bg-gray-500 p-3 rounded-md text-white" : "bg-warning p-3 rounded-md text-white"}>
                 <LuChevronLeft className="text-3" />
               </button>
               <div className="flex justify-center items-center">
                 <p>Lines per page : </p>
                 <div className="ml-3">
-                  <select className="focus:outline-none border-black border p-1 my-1 rounded-md pl-3" name="limit" id="limit">
-                    <option value="5">5</option>
+                  <select onClick={(e) => limit(e.target.value)} className="focus:outline-none border-black border p-1 my-1 rounded-md pl-3" name="limit" id="limit">
+                    <option value="6">6</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
@@ -264,14 +349,14 @@ const CashierMain = () => {
               </div>
               <div className="flex justify-center items-center gap-3">
                 <p>Page :</p>
-                <p>{/* {query.page}/{transaction?.data?.pageInfo?.totalPage} */}</p>
+                <p>
+                  {query.page}/{product?.data?.pageInfo?.totalPage}
+                </p>
               </div>
               <button
-                // onClick={nextPage}
-                // disabled={query.page === product?.data?.pageInfo?.totalPage}
-                className="bg-gray-500 p-4 rounded-md text-white"
-                // {query.page === product?.data?.pageInfo?.totalPage ? "bg-gray-500 p-3 rounded-md text-white" : "bg-[#101540] p-3 rounded-md text-white"}
-              >
+                onClick={nextPage}
+                disabled={query.page === product?.data?.pageInfo?.totalPage}
+                className={query.page === product?.data?.pageInfo?.totalPage ? "bg-gray-500 p-3 rounded-md text-white" : "bg-warning p-3 rounded-md text-white"}>
                 <LuChevronRight className="text-3" />
               </button>
             </div>
