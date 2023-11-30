@@ -143,7 +143,7 @@ const CashierListTransaction = () => {
             <LuChevronLeft className="text-3" />
           </button>
           <div className="flex justify-center items-center">
-            <p>Baris per halaman : </p>
+            <p>Lines per page : </p>
             <div className="ml-3">
               <select className="focus:outline-none border-black border p-1 my-1 rounded-md pl-3" name="limit" id="limit">
                 <option value="5">5</option>
@@ -154,7 +154,7 @@ const CashierListTransaction = () => {
             </div>
           </div>
           <div className="flex justify-center items-center gap-3">
-            <p>Halaman :</p>
+            <p>Page :</p>
             <p>
               {query.page}/{transaction?.data?.pageInfo?.totalPage}
             </p>

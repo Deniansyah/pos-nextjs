@@ -3,17 +3,28 @@ import { LuDollarSign, LuArrowUp, LuBookmarkMinus, LuArrowDown, LuUsers } from "
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 
 const AdminDashboard = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[1];
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    updateDate();
+  }, []);
+
+  const updateDate = () => {
+    const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    const today = new Date();
+    setCurrentDate(today.toLocaleDateString("en-US", options));
+  };
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   if (!isAuthenticated) {
     redirect("/login");
   }
-
   const role = useSelector((state) => state.auth.role);
   if (role === 2) {
     redirect("/cashier-main");
@@ -25,7 +36,7 @@ const AdminDashboard = () => {
       <div className="pl-24 my-5 w-screen mr-4">
         <div className="mb-4 flex flex-col">
           <p className="text-2xl font-bold">Dashboard</p>
-          <p className="mb-3">Kamis, 23 Desember 2023</p>
+          <p className="mb-3">{currentDate}</p>
           <div className="w-full border-b border-gray-400" />
         </div>
         <div className="w-full flex gap-10 justify-center mb-5">
@@ -122,7 +133,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="flex justify-center items-center">
-            <button className="btn btn-outline btn-warning btn-wide btn-sm capitalize">Lainnya...</button>
+            <button className="btn btn-outline btn-warning btn-wide btn-sm capitalize">Other...</button>
           </div>
         </div>
       </div>
