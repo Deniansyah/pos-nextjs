@@ -7,11 +7,9 @@ import { usePathname } from "next/navigation";
 import { redirect, useRouter } from "next/navigation";
 import { LuEdit } from "react-icons/lu";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { categoriesAction } from "../../../store/categories/reducer";
+import { useSelector } from "react-redux";
 
 const AdminEditProduct = ({ params }) => {
-  const dispatch = useDispatch();
   const id = params.id
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
@@ -19,6 +17,7 @@ const AdminEditProduct = ({ params }) => {
   const token = useSelector((state) => state.auth.data);
   const router = useRouter();
 
+  const [categoryDb, setCategoryDb] = useState([]);
   const [product, setProduct] = useState({});
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState("");
@@ -26,22 +25,23 @@ const AdminEditProduct = ({ params }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [hidden, setHidden] = useState(false);
-  const [query, setQuery] = useState({
-    page: 1,
-    limit: 5,
-    searchBy: "name",
-    search: "",
-    sortBy: "createdAt",
-    sort: "ASC",
-  });
-
-  const categoriesDb = useSelector((state) => state.categories);
-  const categoriesData = categoriesDb.data.results;
 
   useEffect(() => {
     getProduct();
-    dispatch(categoriesAction.getCategoriesThunk(query));
-  }, [dispatch, query]);
+    getCategory()
+  }, []);
+
+  const getCategory = async () => {
+    try {
+      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
+      const data = response.data.results;
+      setCategoryDb(data);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
 
   const getProduct = async () => {
     try {
@@ -146,7 +146,7 @@ const AdminEditProduct = ({ params }) => {
                   <option disabled selected>
                     {product.categories_name}
                   </option>
-                  {categoriesData.map((categories) => (
+                  {categoryDb?.map((categories) => (
                     <option key={categories.id} value={categories.id}>
                       {categories.name}
                     </option>
