@@ -3,15 +3,13 @@ import http from "../../helpers/http"
 import Sidebar from "../../components/Sidebar";
 import { usePathname } from "next/navigation";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const AdminInsertProduct = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[1].split("-")[2];
-
-  const categoriesDb = useSelector((state) => state.categories);
-  const categoriesData = categoriesDb.data.results;
+  const [categoryDb, setCategoryDb] = useState([]);
 
   const token = useSelector((state) => state.auth.data);
   const router = useRouter();
@@ -21,6 +19,22 @@ const AdminInsertProduct = () => {
   const [categories, setCategories] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+
+  useEffect(() => {
+    getCategory();
+  }, []);
+
+  const getCategory = async () => {
+    try {
+      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
+      const data = response.data.results;
+      setCategoryDb(data);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
 
   const handlePictureChange = (event) => {
     setPicture(event.target.files[0]);
@@ -112,7 +126,7 @@ const AdminInsertProduct = () => {
                       <option value="DEFAULT" disabled>
                         Select Categories
                       </option>
-                      {categoriesData.map((categories) => (
+                      {categoryDb?.map((categories) => (
                         <option key={categories.id} value={categories.id}>
                           {categories.name}
                         </option>
