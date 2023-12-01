@@ -24,7 +24,7 @@ const CashierListTransaction = () => {
     search: "",
     cInitTrans: "t",
     sortBy: "createdAt",
-    sort: "ASC",
+    sort: "DESC",
   });
 
   const transaction = useSelector((state) => state.transaction);
@@ -230,8 +230,8 @@ const CashierListTransaction = () => {
               <option value="name">Name</option>
             </select>
             <select onClick={(e) => sort(e.target.value)} className="focus:outline-none btn btn-warning text-left" name="sort" id="sort">
-              <option value="ASC">ASC</option>
               <option value="DESC">DESC</option>
+              <option value="ASC">ASC</option>
             </select>
           </div>
         </div>
