@@ -1,5 +1,5 @@
 "use client";
-import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuPencil, LuTrash } from "react-icons/lu";
+import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight, LuTrash } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -257,9 +257,6 @@ const CashierListTransaction = () => {
                       <button onClick={() => deleteTransaction(transaction.id)} size="sm" className="flex justify-center items-center flex-col text-red-500">
                         <LuTrash className="w-5 h-5" /> Delete
                       </button>
-                      <Link href={"/cashier-edit-transaction/" + transaction.id} size="sm" className="flex justify-center items-center flex-col text-yellow-500">
-                        <LuPencil className="w-5 h-5" /> Edit
-                      </Link>
                       <Link href={"/cashier-detail-transaction/" + transaction.id} size="sm" className="flex justify-center items-center flex-col text-blue-500">
                         <LuExternalLink className="w-5 h-5" /> Detail
                       </Link>
