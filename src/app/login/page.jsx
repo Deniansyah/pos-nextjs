@@ -20,7 +20,7 @@ const Login = () => {
   
   useEffect(() => {
     if (isAuthenticated) {
-      redirect("/cashier-main");
+      redirect("/cashier");
     }
   },[])
 
@@ -43,7 +43,7 @@ const Login = () => {
       setShowAlert(true);
     } else {
       const cb = () => {
-        router.push("/cashier-main");
+        router.push("/cashier");
       };
 
       if (isError) {
