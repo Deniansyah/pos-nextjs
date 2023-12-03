@@ -2,14 +2,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import profileDefault from "../../../../public/profileDefault.png";
+import http from "../../../helpers/http";
+import Sidebar from "../../../components/Sidebar";
+import PrivateRoute from "../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { usersAction } from "../../../store/users/reducer";
 import { useDispatch, useSelector } from "react-redux";
-import http from "../../../helpers/http";
-import Sidebar from "../../../components/Sidebar";
 
 const ListUsers = () => {
   const dispatch = useDispatch();
@@ -47,15 +47,6 @@ const ListUsers = () => {
       throw err;
     }
   };
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   const handleSearchChange = (event) => {
     setQuery((prevData) => ({
@@ -315,4 +306,4 @@ const ListUsers = () => {
   );
 };
 
-export default ListUsers;
+export default PrivateRoute(ListUsers, [1]);

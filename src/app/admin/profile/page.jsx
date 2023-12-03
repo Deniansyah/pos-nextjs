@@ -3,12 +3,13 @@ import Image from "next/image";
 import profileDefault from "../../../../public/profileDefault.png";
 import http from "../../../helpers/http";
 import jwt_decode from "jwt-decode";
+import Sidebar from "../../../components/Sidebar";
+import PrivateRoute from "../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
 import { LuEdit } from "react-icons/lu";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Sidebar from "../../../components/Sidebar";
 
 const ProfileSetting = () => {
   const pathname = usePathname();
@@ -75,15 +76,6 @@ const ProfileSetting = () => {
     }
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   const isButtonDisabled = password === "";
 
   return (
@@ -140,4 +132,4 @@ const ProfileSetting = () => {
   );
 };
 
-export default ProfileSetting;
+export default PrivateRoute(ProfileSetting, [1]);

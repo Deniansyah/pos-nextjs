@@ -1,13 +1,13 @@
 "use client";
 import { LuSearch, LuExternalLink, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { transactionAction } from "../../../store/transaction/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import Link from "next/link";
 import Sidebar from "../../../components/Sidebar";
+import PrivateRoute from "../../../components/PrivateRoute";
 
 const ListTransaction = () => {
   const dispatch = useDispatch();
@@ -30,15 +30,6 @@ const ListTransaction = () => {
   useEffect(() => {
     dispatch(transactionAction.getTransactionThunk(query));
   }, [dispatch, query]);
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   // Converter Rupiah
   const formatPrice = (price) => {
@@ -286,4 +277,4 @@ const ListTransaction = () => {
   );
 };
 
-export default ListTransaction;
+export default PrivateRoute(ListTransaction, [1]);

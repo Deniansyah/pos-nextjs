@@ -1,10 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import http from "../../../../../helpers/http";
 import Sidebar from "../../../../../components/Sidebar";
+import PrivateRoute from "../../../../../components/PrivateRoute"
 
 const EditCategory = ({ params }) => {
   const id = params.id;
@@ -50,15 +51,6 @@ const EditCategory = ({ params }) => {
     }
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
       <Sidebar path={currentPath} />
@@ -94,4 +86,4 @@ const EditCategory = ({ params }) => {
   );
 };
 
-export default EditCategory;
+export default PrivateRoute(EditCategory, [1]);

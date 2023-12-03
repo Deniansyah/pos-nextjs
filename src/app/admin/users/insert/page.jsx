@@ -1,9 +1,10 @@
 "use client";
 import Sidebar from "../../../../components/Sidebar";
+import PrivateRoute from "../../../../components/PrivateRoute";
 import http from "../../../../helpers/http";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const InsertUser = () => {
@@ -67,15 +68,6 @@ const InsertUser = () => {
 
   const isButtonDisabled = name === "" || email === "" || password === "" || roleDb === "";
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
       <Sidebar path={currentPath} />
@@ -137,4 +129,4 @@ const InsertUser = () => {
   );
 };
 
-export default InsertUser;
+export default PrivateRoute(InsertUser, [1]);

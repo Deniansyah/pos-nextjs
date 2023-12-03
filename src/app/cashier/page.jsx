@@ -1,6 +1,5 @@
 "use client";
 import { LuSearch, LuX, LuPlus, LuMinus, LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { redirect } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import jwt_decode from "jwt-decode";
 import Image from "next/image";
 import productDefault from "../../../public/productDefault.jpg";
 import SidebarCashier from "../../components/SidebarCashier";
+import PrivateRoute from "../../components/PrivateRoute";
 
 const CashierMain = () => {
   const dispatch = useDispatch();
@@ -41,15 +41,6 @@ const CashierMain = () => {
     setTotal(calculateTotal());
     updateDate();
   }, [dispatch, query, cart]);
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 1) {
-    redirect("/admin");
-  }
 
   const getCategory = async () => {
     try {
@@ -406,4 +397,4 @@ const CashierMain = () => {
   );
 };
 
-export default CashierMain;
+export default PrivateRoute(CashierMain, [2]);

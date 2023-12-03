@@ -1,13 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { categoriesAction } from "../../../store/categories/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import http from "../../../helpers/http";
 import Sidebar from "../../../components/Sidebar";
+import PrivateRoute from "../../../components/PrivateRoute"
 
 const ListCategory = () => {
   const dispatch = useDispatch();
@@ -44,15 +44,6 @@ const ListCategory = () => {
       throw err;
     }
   };
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   const handleSearchChange = (event) => {
     setQuery((prevData) => ({
@@ -278,4 +269,4 @@ const ListCategory = () => {
   );
 };
 
-export default ListCategory;
+export default PrivateRoute(ListCategory, [1]);

@@ -1,10 +1,9 @@
 "use client";
 import { LuDollarSign, LuArrowUp, LuBookmarkMinus, LuArrowDown, LuUsers } from "react-icons/lu";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
+import PrivateRoute from "../../components/PrivateRoute";
 
 const Dashboard = () => {
   const pathname = usePathname();
@@ -20,15 +19,6 @@ const Dashboard = () => {
     const today = new Date();
     setCurrentDate(today.toLocaleDateString("en-US", options));
   };
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
@@ -141,4 +131,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default PrivateRoute(Dashboard, [1]);

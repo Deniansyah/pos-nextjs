@@ -3,8 +3,9 @@ import Image from "next/image";
 import profileDefault from "../../../../../../public/profileDefault.png";
 import Sidebar from "../../../../../components/Sidebar";
 import http from "../../../../../helpers/http";
+import PrivateRoute from "../../../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { LuEdit } from "react-icons/lu";
@@ -80,15 +81,6 @@ const EditUser = ({ params }) => {
     }
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   const isButtonDisabled = password === "";
 
   return (
@@ -159,4 +151,4 @@ const EditUser = ({ params }) => {
   );
 };
 
-export default EditUser;
+export default PrivateRoute(EditUser, [1]);

@@ -3,13 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import productDefault from "../../../../public/productDefault.jpg";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { productAction } from "../../../store/product/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import http from "../../../helpers/http";
 import Sidebar from "../../../components/Sidebar";
+import PrivateRoute from "../../../components/PrivateRoute"
 
 const ListProduct = () => {
   const dispatch = useDispatch();
@@ -49,15 +49,6 @@ const ListProduct = () => {
       throw err;
     }
   };
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   const getCategory = async () => {
     try {
@@ -345,4 +336,4 @@ const ListProduct = () => {
   );
 };
 
-export default ListProduct;
+export default PrivateRoute(ListProduct, [1]);

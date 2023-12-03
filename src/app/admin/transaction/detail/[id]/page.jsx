@@ -1,12 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { detailTransactionAction } from "../../../../../store/detailTransaction/reducer";
 import moment from "moment";
 import http from "../../../../../helpers/http";
 import Sidebar from "../../../../../components/Sidebar";
+import PrivateRoute from "../../../../../components/PrivateRoute";
 
 const DetailTransaction = ({ params }) => {
   const dispatch = useDispatch();
@@ -44,15 +44,6 @@ const DetailTransaction = ({ params }) => {
     return formattedPrice;
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
       <Sidebar path={currentPath} />
@@ -84,4 +75,4 @@ const DetailTransaction = ({ params }) => {
   );
 };
 
-export default DetailTransaction;
+export default PrivateRoute(DetailTransaction, [1]);

@@ -3,8 +3,9 @@ import Image from "next/image";
 import productDefault from "../../../../../../public/productDefault.jpg";
 import http from "../../../../../helpers/http";
 import Sidebar from "../../../../../components/Sidebar";
+import PrivateRoute from "../../../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { LuEdit } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -100,15 +101,6 @@ const EditProduct = ({ params }) => {
     }
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
-
   return (
     <div className="flex bg-gray-200 min-h-screen min-w-screen">
       <Sidebar path={currentPath} />
@@ -183,4 +175,4 @@ const EditProduct = ({ params }) => {
   );
 };
 
-export default EditProduct;
+export default PrivateRoute(EditProduct, [1]);

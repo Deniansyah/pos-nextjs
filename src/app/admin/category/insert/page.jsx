@@ -1,10 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import http from "../../../../helpers/http";
 import Sidebar from "../../../../components/Sidebar";
+import PrivateRoute from "../../../../components/PrivateRoute";
 
 const InsertCategory = () => {
   const pathname = usePathname();
@@ -34,15 +35,6 @@ const InsertCategory = () => {
       throw err;
     }
   };
-
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  if (!isAuthenticated) {
-    redirect("/login");
-  }
-  const role = useSelector((state) => state.auth.role);
-  if (role === 2) {
-    redirect("/cashier");
-  }
 
   const isButtonDisabled = name === "";
 
@@ -81,4 +73,4 @@ const InsertCategory = () => {
   );
 };
 
-export default InsertCategory;
+export default PrivateRoute(InsertCategory, [1]);
