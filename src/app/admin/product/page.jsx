@@ -24,7 +24,7 @@ const ListProduct = () => {
     searchBy: "name",
     search: "",
     sortBy: "createdAt",
-    sort: "ASC",
+    sort: "DESC",
     categories_name: "",
   });
 
@@ -251,8 +251,8 @@ const ListProduct = () => {
               <option value="name">Name</option>
             </select>
             <select onClick={(e) => sort(e.target.value)} className="focus:outline-none btn btn-warning text-left" name="sort" id="sort">
-              <option value="ASC">ASC</option>
               <option value="DESC">DESC</option>
+              <option value="ASC">ASC</option>
             </select>
           </div>
         </div>

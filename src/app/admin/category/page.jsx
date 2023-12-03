@@ -21,7 +21,7 @@ const ListCategory = () => {
     searchBy: "name",
     search: "",
     sortBy: "createdAt",
-    sort: "ASC",
+    sort: "DESC",
   });
 
   const categories = useSelector((state) => state.categories);
@@ -192,8 +192,8 @@ const ListCategory = () => {
               <option value="name">Name</option>
             </select>
             <select onClick={(e) => sort(e.target.value)} className="focus:outline-none btn btn-warning text-left" name="sort" id="sort">
-              <option value="ASC">ASC</option>
               <option value="DESC">DESC</option>
+              <option value="ASC">ASC</option>
             </select>
           </div>
         </div>

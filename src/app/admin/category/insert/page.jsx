@@ -13,6 +13,7 @@ const InsertCategory = () => {
   const token = useSelector((state) => state.auth.data);
   const router = useRouter();
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -20,6 +21,8 @@ const InsertCategory = () => {
 
   const addCategories = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const formData = {
       name: name,
     };
@@ -33,6 +36,8 @@ const InsertCategory = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,8 +68,8 @@ const InsertCategory = () => {
             </table>
           </div>
           <div className="w-full flex">
-            <button type="submit" disabled={isButtonDisabled} className={isButtonDisabled ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
-              Submit
+            <button type="submit" disabled={isButtonDisabled || loading} className={isButtonDisabled || loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}
             </button>
           </div>
         </form>

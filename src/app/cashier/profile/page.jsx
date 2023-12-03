@@ -22,6 +22,7 @@ const ProfileSetting = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [hidden, setHidden] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getUsers();
@@ -52,7 +53,10 @@ const ProfileSetting = () => {
 
   const updateUsers = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const { id } = jwt_decode(token);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("password", password);
@@ -68,12 +72,14 @@ const ProfileSetting = () => {
         },
       });
       alert("Edit users success");
-      router.push("/cashier-main");
+      router.push("/cashier");
       console.log(data);
     } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,8 +128,8 @@ const ProfileSetting = () => {
               </div>
             </div>
             <div className="w-full flex mt-10 justify-center items-center">
-              <button disabled={isButtonDisabled} type="submit" className={isButtonDisabled ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
-                Save Changes
+              <button disabled={isButtonDisabled || loading} type="submit" className={isButtonDisabled || loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+                {loading ? <span className="loading loading-spinner loading-md"></span> : "Save Changes"}
               </button>
             </div>
           </div>

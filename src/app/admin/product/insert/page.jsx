@@ -11,6 +11,7 @@ const InsertProduct = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
   const [categoryDb, setCategoryDb] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const token = useSelector((state) => state.auth.data);
   const router = useRouter();
@@ -60,6 +61,8 @@ const InsertProduct = () => {
 
   const addProduct = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("categories_id", categories);
@@ -83,6 +86,8 @@ const InsertProduct = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,8 +143,8 @@ const InsertProduct = () => {
             </table>
           </div>
           <div className="w-full flex justify-center">
-            <button disabled={isButtonDisabled} type="submit" className={isButtonDisabled ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
-              Submit
+            <button disabled={isButtonDisabled || loading} type="submit" className={isButtonDisabled || loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}
             </button>
           </div>
         </div>

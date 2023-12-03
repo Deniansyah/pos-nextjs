@@ -22,6 +22,7 @@ const CashierMain = () => {
   const [category, setCategory] = useState([]);
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -125,7 +126,10 @@ const CashierMain = () => {
 
   const addTransaction = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const { id } = jwt_decode(token);
+
     const formDataTransaction = {
       users_id: id,
       total: total,
@@ -146,6 +150,8 @@ const CashierMain = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -257,8 +263,8 @@ const CashierMain = () => {
             <p className="text-lg">{formatPrice(total)}</p>
           </div>
           <div className="modal-action">
-            <button onClick={addTransaction} className="btn btn-warning">
-              Order
+            <button onClick={addTransaction} disabled={loading} className={loading ? "btn btn-disabled" : "btn btn-warning"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Order"}
             </button>
             <label htmlFor="my_modal_6" className="btn">
               Back

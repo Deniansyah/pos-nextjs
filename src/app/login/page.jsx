@@ -14,6 +14,7 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const isError = useSelector((state) => state.auth.isError);
   const message = useSelector((state) => state.auth.errorMessage);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -42,7 +43,10 @@ const Login = () => {
     if (email.length === 0 || password.length === 0) {
       setShowAlert(true);
     } else {
+      setIsLoading(true);
+
       const cb = () => {
+        setIsLoading(false);
         router.push("/cashier");
       };
 
@@ -50,6 +54,7 @@ const Login = () => {
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);
+          setIsLoading(false);
         }, 3000);
       }
 
@@ -98,8 +103,8 @@ const Login = () => {
             </label>
             <input type="password" name="password" onChange={handlePasswordChange} placeholder="Insert your password" className="input input-bordered w-full" />
           </div>
-          <button disabled={isButtonDisabled} className={isButtonDisabled ? "btn btn-disabled mt-7 w-1/2" : "btn btn-warning mt-7 w-1/2"}>
-            Login
+          <button disabled={isButtonDisabled || isLoading} className={isButtonDisabled || isLoading ? "btn btn-disabled mt-7 w-1/2" : "btn btn-warning mt-7 w-1/2"}>
+            {isLoading ? <span className="loading loading-spinner loading-md"></span> : "Login"}
           </button>
         </form>
       </div>

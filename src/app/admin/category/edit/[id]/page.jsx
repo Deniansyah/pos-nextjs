@@ -15,6 +15,7 @@ const EditCategory = ({ params }) => {
   const router = useRouter();
   const [categories, setCategories] = useState({});
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCategories();
@@ -35,6 +36,8 @@ const EditCategory = ({ params }) => {
 
   const updateCategories = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const formData = {
       name: name,
     };
@@ -48,6 +51,8 @@ const EditCategory = ({ params }) => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,8 +81,8 @@ const EditCategory = ({ params }) => {
             </table>
           </div>
           <div className="w-full flex">
-            <button type="submit" className="btn btn-success bg-green-500 text-white btn-wide">
-              Save Change
+            <button disabled={loading} type="submit" className={loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Save Changes"}
             </button>
           </div>
         </form>

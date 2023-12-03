@@ -26,6 +26,7 @@ const EditProduct = ({ params }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [hidden, setHidden] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProduct();
@@ -75,6 +76,8 @@ const EditProduct = ({ params }) => {
 
   const updateProduct = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("categories", categories);
@@ -98,6 +101,8 @@ const EditProduct = ({ params }) => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,8 +170,8 @@ const EditProduct = ({ params }) => {
             </div>
           </div>
           <div className="w-full flex justify-center mt-5">
-            <button type="submit" className="btn btn-success bg-green-500 text-white btn-wide">
-              Save Changes
+            <button disabled={loading} type="submit" className={loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Save Changes"}
             </button>
           </div>
         </form>

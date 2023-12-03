@@ -17,6 +17,7 @@ const InsertUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [roleDb, setRoleDb] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handlePictureChange = (event) => {
     setPicture(event.target.files[0]);
@@ -40,6 +41,8 @@ const InsertUser = () => {
 
   const addUsers = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -63,6 +66,8 @@ const InsertUser = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,8 +124,8 @@ const InsertUser = () => {
             </table>
           </div>
           <div className="w-full flex justify-center">
-            <button disabled={isButtonDisabled} type="submit" className={isButtonDisabled ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
-              Submit
+            <button disabled={isButtonDisabled || loading} type="submit" className={isButtonDisabled || loading ? "btn btn-disable btn-wide" : "btn btn-success bg-green-500 text-white btn-wide"}>
+              {loading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}
             </button>
           </div>
         </form>
