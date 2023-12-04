@@ -7,14 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import Link from "next/link";
 import SidebarCashier from "../../../components/SidebarCashier";
-import http from "../../../helpers/http";
 import PrivateRoute from "../../../components/PrivateRoute";
 
 const ListTransaction = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [del, setDel] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
@@ -37,7 +35,7 @@ const ListTransaction = () => {
 
   const deleteTransaction = async (id) => {
     try {
-      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
+      const response = await dispatch(transactionAction.deleteTransactionThunk(id)).unwrap()
       alert("delete transaction success");
       setDel(true);
       console.log(response);
@@ -240,7 +238,7 @@ const ListTransaction = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((transaction) => (
+              {data?.map((transaction) => (
                 <tr key={transaction.id}>
                   <td className="pl-6 py-4 bg-white border-b">
                     <div className="flex space-x-10">

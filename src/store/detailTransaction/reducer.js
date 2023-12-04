@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getDetailTransactionThunk } from "./actions";
+import { getDetailTransactionThunk, createDetailTransactionThunk } from "./actions";
 
 
 const detailTransactionSlice = createSlice({
@@ -29,11 +29,17 @@ const detailTransactionSlice = createSlice({
         errorMessage: action.error.message,
       };
     });
+    builder.addCase(createDetailTransactionThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
 export const detailTransactionAction = {
   ...detailTransactionSlice.actions,
   getDetailTransactionThunk,
+  createDetailTransactionThunk,
 };
 export const detailTransactionReducer = detailTransactionSlice.reducer;

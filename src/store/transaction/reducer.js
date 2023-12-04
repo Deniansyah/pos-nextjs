@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getTransactionThunk, getTransactionByIdThunk } from "./actions";
+import { getTransactionThunk, getTransactionByIdThunk, createTransactionThunk, deleteTransactionThunk } from "./actions";
 
 
 const transactionSlice = createSlice({
@@ -34,6 +34,16 @@ const transactionSlice = createSlice({
         ...state,
       };
     });
+    builder.addCase(createTransactionThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(deleteTransactionThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
@@ -41,5 +51,7 @@ export const transactionAction = {
   ...transactionSlice.actions,
   getTransactionThunk,
   getTransactionByIdThunk,
+  createTransactionThunk,
+  deleteTransactionThunk,
 };
 export const transactionReducer = transactionSlice.reducer;

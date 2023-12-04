@@ -3,8 +3,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { detailTransactionAction } from "../../../../../store/detailTransaction/reducer";
+import { transactionAction } from "../../../../../store/transaction/reducer";
 import moment from "moment";
-import http from "../../../../../helpers/http";
 import SidebarCashier from "../../../../../components/SidebarCashier";
 import PrivateRoute from "../../../../../components/PrivateRoute";
 
@@ -13,24 +13,25 @@ const DetailTransaction = ({ params }) => {
   const id = params.id;
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [transaction, setTransaction] = useState({});
-  const [transaction_id] = useState(id);
 
   const detailTransaction = useSelector((state) => state.detailTransaction);
   const data = detailTransaction?.data?.results;
 
   useEffect(() => {
-    dispatch(detailTransactionAction.getDetailTransactionThunk(transaction_id));
+    dispatch(detailTransactionAction.getDetailTransactionThunk(id));
     getTransaction();
   }, [dispatch]);
 
   const getTransaction = async () => {
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
-      setTransaction(response.data.results);
-    } catch (error) {
+      const response = await dispatch(transactionAction.getTransactionByIdThunk(id)).unwrap()
+      setTransaction(response);
+    } catch (err) {
       setTransaction({});
+      alert(err.message);
+      console.log(err);
+      throw err;
     }
   };
 
@@ -58,7 +59,7 @@ const DetailTransaction = ({ params }) => {
             <p className="mb-3">Cashier Name : {transaction.name}</p>
             <div>
               <ul>
-                {data.map((product, index) => (
+                {data?.map((product, index) => (
                   <li key={index} className="mb-5 ml-5 border border-black rounded-md p-3 w-fit">
                     <p>Product Name : {product.product_name}</p>
                     <p>Product Price : {formatPrice(product.product_price)}</p>

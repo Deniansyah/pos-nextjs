@@ -30,3 +30,29 @@ export const getTransactionByIdThunk = createAsyncThunk(
     }
   }
 )
+
+export const createTransactionThunk = createAsyncThunk(
+  "createTransaction/request",
+  async (formDataTransaction, {getState}) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction`, formDataTransaction);
+      return response
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+)
+
+export const deleteTransactionThunk = createAsyncThunk(
+  "deleteTransaction/request",
+  async (id, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+)

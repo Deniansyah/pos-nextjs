@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productAction } from "../../store/product/reducer";
+import { categoriesAction } from "../../store/categories/reducer";
+import { transactionAction } from "../../store/transaction/reducer";
+import { detailTransactionAction } from "../../store/detailTransaction/reducer";
 import { useRouter } from "next/navigation";
-import http from "../../helpers/http";
 import jwt_decode from "jwt-decode";
 import Image from "next/image";
 import productDefault from "../../../public/productDefault.jpg";
@@ -44,10 +46,10 @@ const CashierMain = () => {
   }, [dispatch, query, cart]);
 
   const getCategory = async () => {
+    const limit = 50;
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
-      const data = response.data.results;
-      setCategory(data);
+      const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
+      setCategory(response);
     } catch (error) {
       alert(err.message);
       console.log(err);
@@ -136,13 +138,13 @@ const CashierMain = () => {
     };
 
     try {
-      const response = await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction`, formDataTransaction);
+      const response = await dispatch(transactionAction.createTransactionThunk(formDataTransaction)).unwrap()
       const newId = response.data.results.id;
 
       const updatedCart = cart.map((item) => ({ ...item, transaction_id: newId }));
       setCart(updatedCart);
 
-      await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/detail-transaction-arr`, updatedCart);
+      await dispatch(detailTransactionAction.createDetailTransactionThunk(updatedCart)).unwrap()
 
       alert("Success Order!");
       router.push("/cashier/transaction");
