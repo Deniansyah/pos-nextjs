@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getProductThunk } from "./actions";
+import { getProductThunk, deleteProductThunk, createProductThunk, getProductByIdThunk, updateProductThunk } from "./actions";
 
 
 const productSlice = createSlice({
@@ -29,11 +29,35 @@ const productSlice = createSlice({
         errorMessage: action.error.message,
       };
     });
+    builder.addCase(deleteProductThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(createProductThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(getProductByIdThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(updateProductThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
 export const productAction = {
   ...productSlice.actions,
   getProductThunk,
+  deleteProductThunk,
+  createProductThunk,
+  getProductByIdThunk,
+  updateProductThunk,
 };
 export const productReducer = productSlice.reducer;

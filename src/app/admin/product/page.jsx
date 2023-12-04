@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { productAction } from "../../../store/product/reducer";
+import { categoriesAction } from "../../../store/categories/reducer";
 import { useDispatch, useSelector } from "react-redux";
-import http from "../../../helpers/http";
 import Sidebar from "../../../components/Sidebar";
 import PrivateRoute from "../../../components/PrivateRoute"
 
@@ -15,7 +15,6 @@ const ListProduct = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [category, setCategory] = useState([]);
   const [del, setDel] = useState(false);
   const [query, setQuery] = useState({
@@ -39,7 +38,7 @@ const ListProduct = () => {
 
   const deleteProduct = async (id) => {
     try {
-      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/product/${id}`);
+      const response = await dispatch(productAction.deleteProductThunk(id)).unwrap()
       alert("delete product succes");
       setDel(true);
       console.log(response);
@@ -51,11 +50,11 @@ const ListProduct = () => {
   };
 
   const getCategory = async () => {
+    const limit = 50
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
-      const data = response.data.results;
-      setCategory(data);
-    } catch (error) {
+      const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap()
+      setCategory(response);
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;

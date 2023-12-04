@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getTransactionThunk } from "./actions";
+import { getTransactionThunk, getTransactionByIdThunk } from "./actions";
 
 
 const transactionSlice = createSlice({
@@ -29,11 +29,17 @@ const transactionSlice = createSlice({
         errorMessage: action.error.message,
       };
     });
+    builder.addCase(getTransactionByIdThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
 export const transactionAction = {
   ...transactionSlice.actions,
   getTransactionThunk,
+  getTransactionByIdThunk,
 };
 export const transactionReducer = transactionSlice.reducer;

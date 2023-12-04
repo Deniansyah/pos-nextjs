@@ -5,7 +5,6 @@ import { LuSearch, LuPlus, LuTrash, LuPencil, LuChevronLeft, LuChevronRight } fr
 import { useEffect, useState } from "react";
 import { categoriesAction } from "../../../store/categories/reducer";
 import { useDispatch, useSelector } from "react-redux";
-import http from "../../../helpers/http";
 import Sidebar from "../../../components/Sidebar";
 import PrivateRoute from "../../../components/PrivateRoute"
 
@@ -13,7 +12,6 @@ const ListCategory = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [del, setDel] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
@@ -34,7 +32,7 @@ const ListCategory = () => {
 
   const deleteCategories = async (id) => {
     try {
-      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories/${id}`);
+      const response = await dispatch(categoriesAction.deleteCategoriesThunk(id)).unwrap()
       alert("delete categories succes");
       setDel(true);
       console.log(response);

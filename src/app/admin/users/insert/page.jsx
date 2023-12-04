@@ -1,16 +1,16 @@
 "use client";
 import Sidebar from "../../../../components/Sidebar";
 import PrivateRoute from "../../../../components/PrivateRoute";
-import http from "../../../../helpers/http";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usersAction } from "../../../../store/users/reducer";
 
 const InsertUser = () => {
+  const dispatch = useDispatch()
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const router = useRouter();
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState("");
@@ -54,11 +54,7 @@ const InsertUser = () => {
     }
 
     try {
-      const data = await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const data = await dispatch(usersAction.createUserThunk(formData)).unwrap()
       alert("add user success");
       router.push("/admin/users");
       console.log(data);

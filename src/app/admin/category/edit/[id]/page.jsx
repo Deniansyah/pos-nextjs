@@ -2,16 +2,16 @@
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import http from "../../../../../helpers/http";
+import { useDispatch } from "react-redux";
+import { categoriesAction } from "../../../../../store/categories/reducer";
 import Sidebar from "../../../../../components/Sidebar";
 import PrivateRoute from "../../../../../components/PrivateRoute"
 
 const EditCategory = ({ params }) => {
+  const dispatch = useDispatch()
   const id = params.id;
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const router = useRouter();
   const [categories, setCategories] = useState({});
   const [name, setName] = useState("");
@@ -23,10 +23,13 @@ const EditCategory = ({ params }) => {
 
   const getCategories = async () => {
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories/${id}`);
-      setCategories(response.data.results);
-    } catch (error) {
+      const response = await dispatch(categoriesAction.getCategoriesByIdThunk(id)).unwrap()
+      setCategories(response);
+    } catch (err) {
       setCategories({});
+      alert(err.message);
+      console.log(err);
+      throw err;
     }
   };
 
@@ -42,8 +45,13 @@ const EditCategory = ({ params }) => {
       name: name,
     };
 
+    const wrapData = {
+      formData: formData,
+      id: id,
+    }
+
     try {
-      const data = await http(token).patch(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories/${id}`, formData);
+      const data = await dispatch(categoriesAction.updateCategoriesThunk(wrapData)).unwrap()
       alert("Edit categories success");
       router.push("/admin/category");
       console.log(data);

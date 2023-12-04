@@ -9,12 +9,14 @@ import { usePathname } from "next/navigation";
 import { LuEdit } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { usersAction } from "../../../store/users/reducer";
 
 const ProfileSetting = () => {
+  const dispatch = useDispatch()
+  const router = useRouter();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const router = useRouter();
   const token = useSelector((state) => state.auth.data);
 
   const [users, setUsers] = useState({});
@@ -32,10 +34,13 @@ const ProfileSetting = () => {
     const { id } = jwt_decode(token);
 
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`);
-      setUsers(response.data.results);
-    } catch (error) {
+      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap()
+      setUsers(response);
+    } catch (err) {
       setUsers({});
+      alert(err.message);
+      console.log(err);
+      throw err;
     }
   };
 
@@ -65,12 +70,13 @@ const ProfileSetting = () => {
       formData.append("picture", picture);
     }
 
+    const wrapData = {
+      formData,
+      id,
+    }
+
     try {
-      const data = await http(token).patch(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const data = await dispatch(usersAction.updateUserThunk(wrapData)).unwrap()
       alert("Edit users success");
       router.push("/admin");
       console.log(data);

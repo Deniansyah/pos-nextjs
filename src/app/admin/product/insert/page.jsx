@@ -1,21 +1,20 @@
 "use client";
-import http from "../../../../helpers/http"
 import Sidebar from "../../../../components/Sidebar";
 import PrivateRoute from "../../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { categoriesAction } from "../../../../store/categories/reducer";
+import { productAction } from "../../../../store/product/reducer";
 
 const InsertProduct = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
   const [categoryDb, setCategoryDb] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const token = useSelector((state) => state.auth.data);
-  const router = useRouter();
-
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState("");
   const [categories, setCategories] = useState("");
@@ -27,10 +26,10 @@ const InsertProduct = () => {
   }, []);
 
   const getCategory = async () => {
+    const limit = 50;
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories?limit=50`);
-      const data = response.data.results;
-      setCategoryDb(data);
+      const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
+      setCategoryDb(response);
     } catch (error) {
       alert(err.message);
       console.log(err);
@@ -74,11 +73,7 @@ const InsertProduct = () => {
     }
 
     try {
-      const data = await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/product`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const data = await dispatch(productAction.createProductThunk(formData)).unwrap()
       alert("add product succes");
       router.push("/admin/product");
       console.log(data);

@@ -2,7 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import profileDefault from "../../../../public/profileDefault.png";
-import http from "../../../helpers/http";
 import Sidebar from "../../../components/Sidebar";
 import PrivateRoute from "../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
@@ -15,7 +14,6 @@ const ListUsers = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [del, setDel] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
@@ -37,7 +35,7 @@ const ListUsers = () => {
 
   const deleteUsers = async (id) => {
     try {
-      const response = await http(token).delete(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`);
+      const response = await dispatch(usersAction.deleteUserThunk(id)).unwrap()
       alert("delete users success");
       setDel(true);
       console.log(response);

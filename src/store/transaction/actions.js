@@ -17,3 +17,16 @@ export const getTransactionThunk = createAsyncThunk(
     }
   }
 );
+
+export const getTransactionByIdThunk = createAsyncThunk(
+  "getTransactionById/request",
+  async (id, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
+      return response.data.results;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+)

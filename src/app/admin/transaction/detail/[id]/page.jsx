@@ -3,8 +3,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { detailTransactionAction } from "../../../../../store/detailTransaction/reducer";
+import { transactionAction } from "../../../../../store/transaction/reducer";
 import moment from "moment";
-import http from "../../../../../helpers/http";
 import Sidebar from "../../../../../components/Sidebar";
 import PrivateRoute from "../../../../../components/PrivateRoute";
 
@@ -13,7 +13,6 @@ const DetailTransaction = ({ params }) => {
   const id = params.id;
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const [transaction, setTransaction] = useState({});
   const [transaction_id] = useState(id);
 
@@ -27,10 +26,13 @@ const DetailTransaction = ({ params }) => {
 
   const getTransaction = async () => {
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/transaction/${id}`);
-      setTransaction(response.data.results);
-    } catch (error) {
+      const response = await dispatch(transactionAction.getTransactionByIdThunk(id)).unwrap()
+      setTransaction(response);
+    } catch (err) {
       setTransaction({});
+      alert(err.message);
+      console.log(err);
+      throw err;
     }
   };
 

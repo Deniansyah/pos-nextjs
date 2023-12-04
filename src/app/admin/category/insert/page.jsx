@@ -2,15 +2,15 @@
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import http from "../../../../helpers/http";
+import { useDispatch } from "react-redux";
+import { categoriesAction } from "../../../../store/categories/reducer";
 import Sidebar from "../../../../components/Sidebar";
 import PrivateRoute from "../../../../components/PrivateRoute";
 
 const InsertCategory = () => {
+  const dispatch = useDispatch()
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-  const token = useSelector((state) => state.auth.data);
   const router = useRouter();
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const InsertCategory = () => {
     };
 
     try {
-      const data = await http(token).post(`${process.env.NEXT_PUBLIC_URL_BACKEND}/categories`, formData);
+      const data = await dispatch(categoriesAction.createCategoriesThunk(formData)).unwrap()
       alert("add categories success");
       router.push("/admin/category");
       console.log(data);

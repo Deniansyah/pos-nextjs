@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getCategoriesThunk } from "./actions";
+import { getCategoriesThunk, getCategoriesFiftyThunk, deleteCategoriesThunk, createCategoriesThunk, getCategoriesByIdThunk, updateCategoriesThunk } from "./actions";
 
 
 const categoriesSlice = createSlice({
@@ -29,11 +29,41 @@ const categoriesSlice = createSlice({
         errorMessage: action.error.message,
       };
     });
+    builder.addCase(getCategoriesFiftyThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(deleteCategoriesThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(createCategoriesThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(getCategoriesByIdThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
+    builder.addCase(updateCategoriesThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
 export const categoriesAction = {
   ...categoriesSlice.actions,
   getCategoriesThunk,
+  getCategoriesFiftyThunk,
+  deleteCategoriesThunk,
+  createCategoriesThunk,
+  getCategoriesByIdThunk,
+  updateCategoriesThunk,
 };
 export const categoriesReducer = categoriesSlice.reducer;

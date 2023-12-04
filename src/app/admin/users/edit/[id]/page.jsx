@@ -2,22 +2,20 @@
 import Image from "next/image";
 import profileDefault from "../../../../../../public/profileDefault.png";
 import Sidebar from "../../../../../components/Sidebar";
-import http from "../../../../../helpers/http";
 import PrivateRoute from "../../../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { LuEdit } from "react-icons/lu";
+import { usersAction } from "../../../../../store/users/reducer";
 
 const EditUser = ({ params }) => {
+  const dispatch = useDispatch()
+  const router = useRouter();
   const id = params.id;
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
-
-  const token = useSelector((state) => state.auth.data);
-  const router = useRouter();
-
   const [users, setUsers] = useState({});
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState("");
@@ -32,10 +30,13 @@ const EditUser = ({ params }) => {
 
   const getUsers = async () => {
     try {
-      const response = await http(token).get(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`);
-      setUsers(response.data.results);
+      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap()
+      setUsers(response);
     } catch (error) {
       setUsers({});
+      alert(err.message);
+      console.log(err);
+      throw err;
     }
   };
 
@@ -68,12 +69,13 @@ const EditUser = ({ params }) => {
       formData.append("picture", picture);
     }
 
+    const wrapData = {
+      formData: formData,
+      id: id,
+    }
+
     try {
-      const data = await http(token).patch(`${process.env.NEXT_PUBLIC_URL_BACKEND}/users/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const data = await dispatch(usersAction.updateUserThunk(wrapData)).unwrap()
       alert("Edit users success");
       router.push("/admin/users");
       console.log(data);
