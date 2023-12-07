@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { detailTransactionAction } from "../../store/detailTransaction/reducer";
+import { transactionAction } from "../../store/transaction/reducer";
 import Image from "next/image";
 import productDefault from "../../../public/productDefault.jpg";
 import Sidebar from "../../components/Sidebar";
@@ -15,6 +16,9 @@ const Dashboard = () => {
   const currentPath = pathname.split("/")[1];
   const [currentDate, setCurrentDate] = useState("");
   const [mpo, setMpo] = useState([]);
+  const [todaysTotals, setTodaysTotals] = useState(0)
+  const [yesterdaysTotals, setYesterdaysTotals] = useState(0)
+  const [comparison, setComparison] = useState(0)
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -22,14 +26,48 @@ const Dashboard = () => {
 
   useEffect(() => {
     getPopularProduct();
+    getAllTodaysTotals()
+    getAllYesterdaysTotals()
+    updateComparison()
     updateDate();
-  }, [query]);
+  }, [query, todaysTotals, yesterdaysTotals, comparison]);
+
+  const getAllTodaysTotals = async () => {
+    try {
+      const response = await dispatch(transactionAction.getAllTodaysTotalsThunk()).unwrap();
+      setTodaysTotals(response.results.alltotal);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const getAllYesterdaysTotals = async () => {
+    try {
+      const response = await dispatch(transactionAction.getAllYesterdaysTotalsThunk()).unwrap();
+      setYesterdaysTotals(response.results.alltotal);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const updateComparison = () => {
+    if (todaysTotals > yesterdaysTotals) {
+      setComparison(((todaysTotals - yesterdaysTotals) / yesterdaysTotals) * 100);
+    } else if (todaysTotals < yesterdaysTotals) {
+      setComparison(-((yesterdaysTotals - todaysTotals) / yesterdaysTotals) * 100);
+    } else {
+      setComparison(0);
+    }
+  }
 
   const getPopularProduct = async () => {
     try {
       const response = await dispatch(detailTransactionAction.getPopularProductThunk(query)).unwrap();
       setMpo(response);
-      console.log(response);
     } catch (error) {
       alert(err.message);
       console.log(err);
@@ -82,13 +120,20 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuDollarSign className="text-warning" />
               </span>
-              <div className="flex justify-center items-center text-green-500">
-                <p>+32%</p>
-                <LuArrowUp />
+              <div
+                className={
+                  comparison > 0 
+                  ? "flex justify-center items-center text-green-500" 
+                  : comparison < 0 
+                  ? "flex justify-center items-center text-red-500" 
+                  : "flex justify-center items-center"
+                }>
+                <p>{comparison > 0 ? `+${comparison.toFixed(2)}%` : comparison < 0 ? `${comparison.toFixed(2)}%` : "No changes"}</p>
+                {comparison > 0 ? <LuArrowUp /> : comparison < 0 ? <LuArrowDown /> : null}
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold">Rp. 50.000</p>
+              <p className="text-2xl font-bold">{formatPrice(todaysTotals)}</p>
             </div>
             <div>
               <p>Total Revenue</p>

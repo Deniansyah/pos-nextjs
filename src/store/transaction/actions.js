@@ -56,3 +56,29 @@ export const deleteTransactionThunk = createAsyncThunk(
     }
   }
 )
+
+export const getAllTodaysTotalsThunk = createAsyncThunk(
+  "getAllTodaysTotals/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/transaction/today`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);
+
+export const getAllYesterdaysTotalsThunk = createAsyncThunk(
+  "getAllYesterdaysTotals/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/transaction/yesterday`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);
