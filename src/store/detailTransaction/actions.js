@@ -25,3 +25,20 @@ export const createDetailTransactionThunk = createAsyncThunk(
     }
   }
 )
+
+export const getPopularProductThunk = createAsyncThunk(
+  "getPopularProduct/request",
+  async (query, { getState }) => {
+    const {limit, page} = query
+
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(
+        `/detail-transaction/popular-product${limit ? "?limit=" + limit : "?limit"}${page ? "&page=" + page : "&page"}`
+      );
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);

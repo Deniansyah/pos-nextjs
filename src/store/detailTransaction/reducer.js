@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./initialState";
-import { getDetailTransactionThunk, createDetailTransactionThunk } from "./actions";
+import { getDetailTransactionThunk, createDetailTransactionThunk, getPopularProductThunk } from "./actions";
 
 
 const detailTransactionSlice = createSlice({
@@ -34,6 +34,11 @@ const detailTransactionSlice = createSlice({
         ...state,
       };
     });
+    builder.addCase(getPopularProductThunk.fulfilled, (state) => {
+      return {
+        ...state,
+      };
+    });
   },
 });
 
@@ -41,5 +46,6 @@ export const detailTransactionAction = {
   ...detailTransactionSlice.actions,
   getDetailTransactionThunk,
   createDetailTransactionThunk,
+  getPopularProductThunk,
 };
 export const detailTransactionReducer = detailTransactionSlice.reducer;
