@@ -42,3 +42,29 @@ export const getPopularProductThunk = createAsyncThunk(
     }
   }
 );
+
+export const getTodaysOrderedThunk = createAsyncThunk(
+  "getTodaysOrdered/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/detail-transaction/ordered/today`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);
+
+export const getYesterdaysOrderedThunk = createAsyncThunk(
+  "getYesterdaysOrdered/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/detail-transaction/ordered/yesterday`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);

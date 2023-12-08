@@ -22,6 +22,9 @@ const Dashboard = () => {
   const [todaysCustomers, setTodaysCustomers] = useState(0)
   const [yesterdaysCustomers, setYesterdaysCustomers] = useState(0)
   const [comparisonCustomers, setComparisonCustomers] = useState(0)
+  const [todaysOrdered, setTodaysOrdered] = useState(0)
+  const [yesterdaysOrdered, setYesterdaysOrdered] = useState(0)
+  const [comparisonOrdered, setComparisonOrdered] = useState(0)
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -29,14 +32,17 @@ const Dashboard = () => {
 
   useEffect(() => {
     getPopularProduct();
-    getAllTodaysTotals()
-    getAllYesterdaysTotals()
-    updateComparison()
-    getTodaysCustomers()
-    getYesterdaysCustomers()
-    updateComparisonCustomers()
+    getAllTodaysTotals();
+    getAllYesterdaysTotals();
+    updateComparison();
+    getTodaysCustomers();
+    getYesterdaysCustomers();
+    updateComparisonCustomers();
+    getTodaysOrdered()
+    getYesterdaysOrdered();
+    updateComparisonOrdered();
     updateDate();
-  }, [query, todaysTotals, yesterdaysTotals, comparison, todaysCustomers, yesterdaysCustomers, comparisonCustomers]);
+  }, [query, todaysTotals, yesterdaysTotals, comparison, todaysCustomers, yesterdaysCustomers, comparisonCustomers, todaysOrdered, yesterdaysOrdered, comparisonOrdered]);
 
   const getAllTodaysTotals = async () => {
     try {
@@ -101,6 +107,42 @@ const Dashboard = () => {
       setComparisonCustomers(0);
     }
   };
+
+
+  const getTodaysOrdered = async () => {
+    try {
+      const response = await dispatch(detailTransactionAction.getTodaysOrderedThunk()).unwrap();
+      setTodaysOrdered(response.results.productOrdered);
+      console.log(response.results.productOrdered);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const getYesterdaysOrdered = async () => {
+    try {
+      const response = await dispatch(detailTransactionAction.getYesterdaysOrderedThunk()).unwrap();
+      setYesterdaysOrdered(response.results.productOrdered);
+      console.log(response.results.productOrdered);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const updateComparisonOrdered = () => {
+    if (todaysOrdered > yesterdaysOrdered) {
+      setComparisonOrdered(((todaysOrdered - yesterdaysOrdered) / yesterdaysOrdered) * 100);
+    } else if (todaysOrdered < yesterdaysOrdered) {
+      setComparisonOrdered(-((yesterdaysOrdered - todaysOrdered) / yesterdaysOrdered) * 100);
+    } else {
+      setComparisonOrdered(0);
+    }
+  };
+
 
   const getPopularProduct = async () => {
     try {
@@ -175,13 +217,13 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuBookmarkMinus className="text-warning" />
               </span>
-              <div className="flex justify-center items-center text-red-500">
-                <p>-22%</p>
-                <LuArrowDown />
+              <div className={comparisonOrdered > 0 ? "flex justify-center items-center text-green-500" : comparisonOrdered < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
+                <p>{comparisonOrdered > 0 ? `+${comparisonOrdered.toFixed(2)}%` : comparisonOrdered < 0 ? `${comparisonOrdered.toFixed(2)}%` : "No changes"}</p>
+                {comparisonOrdered > 0 ? <LuArrowUp /> : comparisonOrdered < 0 ? <LuArrowDown /> : null}
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold">24,532</p>
+              <p className="text-2xl font-bold">{todaysOrdered}</p>
             </div>
             <div>
               <p>Total products ordered</p>
