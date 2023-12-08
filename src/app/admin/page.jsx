@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [todaysTotals, setTodaysTotals] = useState(0)
   const [yesterdaysTotals, setYesterdaysTotals] = useState(0)
   const [comparison, setComparison] = useState(0)
+  const [todaysCustomers, setTodaysCustomers] = useState(0)
+  const [yesterdaysCustomers, setYesterdaysCustomers] = useState(0)
+  const [comparisonCustomers, setComparisonCustomers] = useState(0)
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -29,8 +32,11 @@ const Dashboard = () => {
     getAllTodaysTotals()
     getAllYesterdaysTotals()
     updateComparison()
+    getTodaysCustomers()
+    getYesterdaysCustomers()
+    updateComparisonCustomers()
     updateDate();
-  }, [query, todaysTotals, yesterdaysTotals, comparison]);
+  }, [query, todaysTotals, yesterdaysTotals, comparison, todaysCustomers, yesterdaysCustomers, comparisonCustomers]);
 
   const getAllTodaysTotals = async () => {
     try {
@@ -63,6 +69,38 @@ const Dashboard = () => {
       setComparison(0);
     }
   }
+
+  const getTodaysCustomers = async () => {
+    try {
+      const response = await dispatch(transactionAction.getTodaysCustomersThunk()).unwrap();
+      setTodaysCustomers(response.results.customer);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const getYesterdaysCustomers = async () => {
+    try {
+      const response = await dispatch(transactionAction.getYesterdaysCustomersThunk()).unwrap();
+      setYesterdaysCustomers(response.results.customer);
+    } catch (error) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const updateComparisonCustomers = () => {
+    if (todaysCustomers > yesterdaysCustomers) {
+      setComparisonCustomers(((todaysCustomers - yesterdaysCustomers) / yesterdaysCustomers) * 100);
+    } else if (todaysCustomers < yesterdaysCustomers) {
+      setComparisonCustomers(-((yesterdaysCustomers - todaysCustomers) / yesterdaysCustomers) * 100);
+    } else {
+      setComparisonCustomers(0);
+    }
+  };
 
   const getPopularProduct = async () => {
     try {
@@ -120,14 +158,7 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuDollarSign className="text-warning" />
               </span>
-              <div
-                className={
-                  comparison > 0 
-                  ? "flex justify-center items-center text-green-500" 
-                  : comparison < 0 
-                  ? "flex justify-center items-center text-red-500" 
-                  : "flex justify-center items-center"
-                }>
+              <div className={comparison > 0 ? "flex justify-center items-center text-green-500" : comparison < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
                 <p>{comparison > 0 ? `+${comparison.toFixed(2)}%` : comparison < 0 ? `${comparison.toFixed(2)}%` : "No changes"}</p>
                 {comparison > 0 ? <LuArrowUp /> : comparison < 0 ? <LuArrowDown /> : null}
               </div>
@@ -161,13 +192,13 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuUsers className="text-warning" />
               </span>
-              <div className="flex justify-center items-center text-green-500">
-                <p>+10%</p>
-                <LuArrowUp />
+              <div className={comparisonCustomers > 0 ? "flex justify-center items-center text-green-500" : comparisonCustomers < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
+                <p>{comparisonCustomers > 0 ? `+${comparisonCustomers.toFixed(2)}%` : comparisonCustomers < 0 ? `${comparisonCustomers.toFixed(2)}%` : "No changes"}</p>
+                {comparisonCustomers > 0 ? <LuArrowUp /> : comparisonCustomers < 0 ? <LuArrowDown /> : null}
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold">1.234</p>
+              <p className="text-2xl font-bold">{todaysCustomers}</p>
             </div>
             <div>
               <p>Total Customer</p>

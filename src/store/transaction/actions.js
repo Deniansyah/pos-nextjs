@@ -82,3 +82,29 @@ export const getAllYesterdaysTotalsThunk = createAsyncThunk(
     }
   }
 );
+
+export const getTodaysCustomersThunk = createAsyncThunk(
+  "getTodaysCustomers/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/transaction/customer/today`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);
+
+export const getYesterdaysCustomersThunk = createAsyncThunk(
+  "getYesterdaysCustomers/request",
+  async (params, { getState }) => {
+    try {
+      const token = getState().auth.data;
+      const response = await http(token).get(`/transaction/customer/yesterday`);
+      return response.data;
+    } catch (err) {
+      throw err.response.data.message;
+    }
+  }
+);
