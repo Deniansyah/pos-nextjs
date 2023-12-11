@@ -41,8 +41,7 @@ const Landing = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <a className="btn btn-ghost rounded-full mr-3 w-20 btn-sm">Login</a>
-          <a className="btn btn-warning rounded-full mr-5 w-28 btn-sm">Register</a>
+          <Link href={"/login"} className="btn btn-warning rounded-full mr-5 w-28 btn-sm">Login</Link>
         </div>
       </div>
       <div className="h-screen -my-20 px-20 pt-40">
