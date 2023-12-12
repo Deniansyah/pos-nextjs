@@ -35,17 +35,8 @@ const ListProduct = () => {
   useEffect(() => {
     getCategory();
     setDel(false);
-    
-    const debounceTimeout = setTimeout(() => {
-      if (query.search) {
-        dispatch(productAction.getProductThunk(query));
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(debounceTimeout);
-    };
-  }, [dispatch, del, query, query.search]);
+    dispatch(productAction.getProductThunk(query));
+  }, [dispatch, del, query]);
 
   const deleteProduct = async (id) => {
     try {

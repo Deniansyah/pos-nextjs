@@ -28,17 +28,8 @@ const ListCategory = () => {
 
   useEffect(() => {
     setDel(false);
-    
-    const debounceTimeout = setTimeout(() => {
-      if (query.search) {
-        dispatch(categoriesAction.getCategoriesThunk(query));
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(debounceTimeout);
-    };
-  }, [dispatch, del, query, query.search]);
+    dispatch(categoriesAction.getCategoriesThunk(query));
+  }, [dispatch, del, query]);
 
   const deleteCategories = async (id) => {
     try {

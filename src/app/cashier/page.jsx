@@ -44,17 +44,8 @@ const CashierMain = () => {
     getCategory();
     setTotal(calculateTotal());
     updateDate();
-    
-    const debounceTimeout = setTimeout(() => {
-      if (query.search) {
-        dispatch(productAction.getProductThunk(query));
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(debounceTimeout);
-    };
-  }, [dispatch, query, cart, query.search]);
+    dispatch(productAction.getProductThunk(query));
+  }, [dispatch, query, cart]);
 
   const getCategory = async () => {
     setIsLoading(true)
