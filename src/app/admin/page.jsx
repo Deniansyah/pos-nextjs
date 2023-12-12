@@ -127,7 +127,6 @@ const Dashboard = () => {
     try {
       const response = await dispatch(detailTransactionAction.getTodaysOrderedThunk()).unwrap();
       setTodaysOrdered(response.results.productOrdered);
-      console.log(response.results.productOrdered);
     } catch (err) {
       alert(err.message);
       console.log(err);
@@ -142,7 +141,6 @@ const Dashboard = () => {
     try {
       const response = await dispatch(detailTransactionAction.getYesterdaysOrderedThunk()).unwrap();
       setYesterdaysOrdered(response.results.productOrdered);
-      console.log(response.results.productOrdered);
     } catch (err) {
       alert(err.message);
       console.log(err);

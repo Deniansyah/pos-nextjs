@@ -26,6 +26,7 @@ const CashierMain = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -162,14 +163,32 @@ const CashierMain = () => {
   };
 
   const handleSearchChange = (event) => {
-    setQuery((prevData) => ({
-      ...prevData,
-      search: event.target.value,
-    }));
-    setQuery((prevData) => ({
-      ...prevData,
-      page: 1,
-    }));
+    setSearchTerm(event.target.value);
+    if (event.target.value.trim() === "") {
+      setQuery((prevData) => ({
+        ...prevData,
+        search: "",
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+  };
+
+  const handleSearch = (event) => {
+    if (event.key === "Enter") {
+      if (searchTerm.trim() !== "") {
+        setQuery((prevData) => ({
+          ...prevData,
+          search: searchTerm,
+        }));
+        setQuery((prevData) => ({
+          ...prevData,
+          page: 1,
+        }));
+      }
+    }
   };
 
   const limit = (value) => {
@@ -294,7 +313,7 @@ const CashierMain = () => {
             </div>
             <div className="relative">
               <LuSearch className="absolute text-2xl text-warning top-3 left-3" />
-              <input onChange={handleSearchChange} className="h-full px-5 pl-12 rounded-xl w-[32rem] input input-bordered input-warning" type="text" placeholder="Search product..." />
+              <input value={searchTerm} onKeyDown={handleSearch} onChange={handleSearchChange} className="h-full px-5 pl-12 rounded-xl w-[32rem] input input-bordered input-warning" type="text" placeholder="Search product..." />
             </div>
           </div>
           {/* Categoty */}

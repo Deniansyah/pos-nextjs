@@ -13,6 +13,7 @@ const ListTransaction = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
+  const [searchTerm, setSearchTerm] = useState("");
   const [query, setQuery] = useState({
     page: 1,
     limit: 5,
@@ -42,14 +43,32 @@ const ListTransaction = () => {
   };
 
   const handleSearchChange = (event) => {
-    setQuery((prevData) => ({
-      ...prevData,
-      search: event.target.value,
-    }));
-    setQuery((prevData) => ({
-      ...prevData,
-      page: 1,
-    }));
+    setSearchTerm(event.target.value);
+    if (event.target.value.trim() === "") {
+      setQuery((prevData) => ({
+        ...prevData,
+        search: "",
+      }));
+      setQuery((prevData) => ({
+        ...prevData,
+        page: 1,
+      }));
+    }
+  };
+
+  const handleSearch = (event) => {
+    if (event.key === "Enter") {
+      if (searchTerm.trim() !== "") {
+        setQuery((prevData) => ({
+          ...prevData,
+          search: searchTerm,
+        }));
+        setQuery((prevData) => ({
+          ...prevData,
+          page: 1,
+        }));
+      }
+    }
   };
 
   const sortSearch = (value) => {
@@ -190,7 +209,7 @@ const ListTransaction = () => {
           <div className="flex grow gap-3 border-2 rounded-md border-gray-400 py-2 px-3">
             <div className="relative flex gap-5 w-full">
               <LuSearch className="absolute text-2xl text-warning top-3 left-3" />
-              <input onChange={handleSearchChange} className="px-5 pl-12 rounded-xl input input-bordered input-warning w-full" type="text" placeholder="Search something..." />
+              <input value={searchTerm} onKeyDown={handleSearch} onChange={handleSearchChange} className="px-5 pl-12 rounded-xl input input-bordered input-warning w-full" type="text" placeholder="Search something..." />
             </div>
             <select onClick={(e) => sortSearch(e.target.value)} className="focus:outline-none rounded-md btn btn-warning text-left" name="seachBy" id="seachBy">
               <option value="name">Name</option>
