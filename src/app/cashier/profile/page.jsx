@@ -135,7 +135,7 @@ const ProfileSetting = () => {
                   <input className="input w-full max-w-xs mt-1 disabled" name="email" type="text" defaultValue={users.email} disabled />
                 </div>
                 <div>
-                  <p>Password :</p>
+                  <p><span className="text-warning">*</span>Password :</p>
                   <input className="input w-full max-w-xs mt-1" name="password" type="password" placeholder="Insert to save changes" onChange={handlePasswordChange} />
                 </div>
               </div>
