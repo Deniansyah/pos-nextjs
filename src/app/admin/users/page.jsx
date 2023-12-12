@@ -29,9 +29,18 @@ const ListUsers = () => {
   const data = users.data.results;
 
   useEffect(() => {
-    dispatch(usersAction.getUsersThunk(query));
     setDel(false);
-  }, [dispatch, del, query]);
+    
+    const debounceTimeout = setTimeout(() => {
+      if (query.search) {
+        dispatch(usersAction.getUsersThunk(query));
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [dispatch, del, query, query.search]);
 
   const deleteUsers = async (id) => {
     try {

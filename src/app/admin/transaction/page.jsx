@@ -28,8 +28,16 @@ const ListTransaction = () => {
   const data = transaction?.data?.results;
 
   useEffect(() => {
-    dispatch(transactionAction.getTransactionThunk(query));
-  }, [dispatch, query]);
+    const debounceTimeout = setTimeout(() => {
+      if (query.search) {
+        dispatch(transactionAction.getTransactionThunk(query));
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [dispatch, query, query.search]);
 
   // Converter Rupiah
   const formatPrice = (price) => {
