@@ -30,9 +30,18 @@ const ListTransaction = () => {
   const data = transaction?.data?.results;
 
   useEffect(() => {
-    dispatch(transactionAction.getTransactionThunk(query));
     setDel(false);
-  }, [dispatch, del, query]);
+    
+    const debounceTimeout = setTimeout(() => {
+      if (query.search) {
+        dispatch(transactionAction.getTransactionThunk(query));
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [dispatch, del, query, query.search]);
 
   const deleteTransaction = async (id) => {
     try {

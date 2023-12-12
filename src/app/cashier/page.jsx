@@ -41,11 +41,20 @@ const CashierMain = () => {
   const data = product.data.results;
 
   useEffect(() => {
-    dispatch(productAction.getProductThunk(query));
     getCategory();
     setTotal(calculateTotal());
     updateDate();
-  }, [dispatch, query, cart]);
+    
+    const debounceTimeout = setTimeout(() => {
+      if (query.search) {
+        dispatch(productAction.getProductThunk(query));
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [dispatch, query, cart, query.search]);
 
   const getCategory = async () => {
     setIsLoading(true)
