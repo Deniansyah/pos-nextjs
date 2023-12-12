@@ -52,7 +52,7 @@ const CashierMain = () => {
     try {
       const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
       setCategory(response);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;

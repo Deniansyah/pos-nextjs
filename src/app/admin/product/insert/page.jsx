@@ -32,7 +32,7 @@ const InsertProduct = () => {
     try {
       const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
       setCategoryDb(response);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;

@@ -34,7 +34,7 @@ const EditUser = ({ params }) => {
     try {
       const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap();
       setUsers(response);
-    } catch (error) {
+    } catch (err) {
       setUsers({});
       alert(err.message);
       console.log(err);

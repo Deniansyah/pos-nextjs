@@ -50,7 +50,7 @@ const Dashboard = () => {
     try {
       const response = await dispatch(transactionAction.getAllTodaysTotalsThunk()).unwrap();
       setTodaysTotals(response.results.alltotal);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -64,7 +64,7 @@ const Dashboard = () => {
     try {
       const response = await dispatch(transactionAction.getAllYesterdaysTotalsThunk()).unwrap();
       setYesterdaysTotals(response.results.alltotal);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -88,7 +88,7 @@ const Dashboard = () => {
     try {
       const response = await dispatch(transactionAction.getTodaysCustomersThunk()).unwrap();
       setTodaysCustomers(response.results.customer);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -102,7 +102,7 @@ const Dashboard = () => {
     try {
       const response = await dispatch(transactionAction.getYesterdaysCustomersThunk()).unwrap();
       setYesterdaysCustomers(response.results.customer);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -128,7 +128,7 @@ const Dashboard = () => {
       const response = await dispatch(detailTransactionAction.getTodaysOrderedThunk()).unwrap();
       setTodaysOrdered(response.results.productOrdered);
       console.log(response.results.productOrdered);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -143,7 +143,7 @@ const Dashboard = () => {
       const response = await dispatch(detailTransactionAction.getYesterdaysOrderedThunk()).unwrap();
       setYesterdaysOrdered(response.results.productOrdered);
       console.log(response.results.productOrdered);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
@@ -168,7 +168,7 @@ const Dashboard = () => {
     try {
       const response = await dispatch(detailTransactionAction.getPopularProductThunk(query)).unwrap();
       setMpo(response);
-    } catch (error) {
+    } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
