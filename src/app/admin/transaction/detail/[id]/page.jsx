@@ -15,16 +15,19 @@ const DetailTransaction = ({ params }) => {
   const currentPath = pathname.split("/")[2];
   const [transaction, setTransaction] = useState({});
   const [transaction_id] = useState(id);
+  const [loading, setLoading] = useState(false);
 
   const detailTransaction = useSelector((state) => state.detailTransaction);
   const data = detailTransaction?.data?.results;
 
   useEffect(() => {
-    dispatch(detailTransactionAction.getDetailTransactionThunk(transaction_id));
     getTransaction();
-  }, [dispatch]);
+    dispatch(detailTransactionAction.getDetailTransactionThunk(transaction_id));
+  }, []);
 
   const getTransaction = async () => {
+    setLoading(true)
+
     try {
       const response = await dispatch(transactionAction.getTransactionByIdThunk(id)).unwrap()
       setTransaction(response);
@@ -33,6 +36,8 @@ const DetailTransaction = ({ params }) => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +52,12 @@ const DetailTransaction = ({ params }) => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {loading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen mr-4">
         <div className="mb-5">

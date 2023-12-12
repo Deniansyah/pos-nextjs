@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import profileDefault from "../../../../public/profileDefault.png";
-import http from "../../../helpers/http";
 import jwt_decode from "jwt-decode";
 import Sidebar from "../../../components/Sidebar";
 import PrivateRoute from "../../../components/PrivateRoute";
@@ -25,22 +24,26 @@ const ProfileSetting = () => {
   const [password, setPassword] = useState("");
   const [hidden, setHidden] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, []);
 
   const getUsers = async () => {
+    setIsLoading(true)
     const { id } = jwt_decode(token);
 
     try {
-      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap()
+      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap();
       setUsers(response);
     } catch (err) {
       setUsers({});
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,7 +95,12 @@ const ProfileSetting = () => {
   const isButtonDisabled = password === "";
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {isLoading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="mb-5">
@@ -128,7 +136,7 @@ const ProfileSetting = () => {
                   <input className="input w-full max-w-xs mt-1 disabled" name="email" type="text" defaultValue={users.email} disabled />
                 </div>
                 <div>
-                  <p>Password :</p>
+                  <p><span className="text-warning">*</span>Password :</p>
                   <input className="input w-full max-w-xs mt-1" name="password" type="password" placeholder="Insert to save changes" onChange={handlePasswordChange} />
                 </div>
               </div>

@@ -25,6 +25,7 @@ const CashierMain = () => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
     limit: 6,
@@ -46,6 +47,7 @@ const CashierMain = () => {
   }, [dispatch, query, cart]);
 
   const getCategory = async () => {
+    setIsLoading(true)
     const limit = 50;
     try {
       const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
@@ -54,6 +56,8 @@ const CashierMain = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -274,7 +278,12 @@ const CashierMain = () => {
           </div>
         </div>
       </div>
-      <div className="flex bg-gray-200 min-h-screen min-w-screen">
+      <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+        {isLoading ? (
+          <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center z-10">
+            <span className="loading loading-spinner loading-lg text-warning"></span>
+          </div>
+        ) : null}
         <SidebarCashier path={currentPath} />
         {/* isi */}
         <div className="pl-24 mt-5 w-full">

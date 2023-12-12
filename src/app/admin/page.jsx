@@ -16,6 +16,7 @@ const Dashboard = () => {
   const currentPath = pathname.split("/")[1];
   const [currentDate, setCurrentDate] = useState("");
   const [mpo, setMpo] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [todaysTotals, setTodaysTotals] = useState(0)
   const [yesterdaysTotals, setYesterdaysTotals] = useState(0)
   const [comparison, setComparison] = useState(0)
@@ -45,6 +46,7 @@ const Dashboard = () => {
   }, [query, todaysTotals, yesterdaysTotals, comparison, todaysCustomers, yesterdaysCustomers, comparisonCustomers, todaysOrdered, yesterdaysOrdered, comparisonOrdered]);
 
   const getAllTodaysTotals = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(transactionAction.getAllTodaysTotalsThunk()).unwrap();
       setTodaysTotals(response.results.alltotal);
@@ -52,10 +54,13 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const getAllYesterdaysTotals = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(transactionAction.getAllYesterdaysTotalsThunk()).unwrap();
       setYesterdaysTotals(response.results.alltotal);
@@ -63,6 +68,8 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,10 +80,11 @@ const Dashboard = () => {
       setComparison(-((yesterdaysTotals - todaysTotals) / yesterdaysTotals) * 100);
     } else {
       setComparison(0);
-    }
+    } 
   }
 
   const getTodaysCustomers = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(transactionAction.getTodaysCustomersThunk()).unwrap();
       setTodaysCustomers(response.results.customer);
@@ -84,10 +92,13 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const getYesterdaysCustomers = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(transactionAction.getYesterdaysCustomersThunk()).unwrap();
       setYesterdaysCustomers(response.results.customer);
@@ -95,6 +106,8 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,6 +123,7 @@ const Dashboard = () => {
 
 
   const getTodaysOrdered = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(detailTransactionAction.getTodaysOrderedThunk()).unwrap();
       setTodaysOrdered(response.results.productOrdered);
@@ -118,10 +132,13 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const getYesterdaysOrdered = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(detailTransactionAction.getYesterdaysOrderedThunk()).unwrap();
       setYesterdaysOrdered(response.results.productOrdered);
@@ -130,6 +147,8 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,6 +164,7 @@ const Dashboard = () => {
 
 
   const getPopularProduct = async () => {
+    setLoading(true)
     try {
       const response = await dispatch(detailTransactionAction.getPopularProductThunk(query)).unwrap();
       setMpo(response);
@@ -152,6 +172,8 @@ const Dashboard = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,7 +208,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {loading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen mr-4">
         <div className="mb-4 flex flex-col">

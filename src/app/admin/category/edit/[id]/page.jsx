@@ -16,20 +16,24 @@ const EditCategory = ({ params }) => {
   const [categories, setCategories] = useState({});
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getCategories();
   }, []);
 
   const getCategories = async () => {
+    setIsLoading(true)
     try {
-      const response = await dispatch(categoriesAction.getCategoriesByIdThunk(id)).unwrap()
+      const response = await dispatch(categoriesAction.getCategoriesByIdThunk(id)).unwrap();
       setCategories(response);
     } catch (err) {
       setCategories({});
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,7 +69,12 @@ const EditCategory = ({ params }) => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {isLoading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="mb-5">

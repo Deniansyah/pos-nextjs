@@ -6,7 +6,7 @@ import PrivateRoute from "../../../../../components/PrivateRoute";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { LuEdit } from "react-icons/lu";
 import { usersAction } from "../../../../../store/users/reducer";
 
@@ -23,20 +23,24 @@ const EditUser = ({ params }) => {
   const [roleDb, setRoleDb] = useState("");
   const [hidden, setHidden] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, []);
 
   const getUsers = async () => {
+    setIsLoading(true)
     try {
-      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap()
+      const response = await dispatch(usersAction.getUserByIdThunk(id)).unwrap();
       setUsers(response);
     } catch (error) {
       setUsers({});
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +95,12 @@ const EditUser = ({ params }) => {
   const isButtonDisabled = password === "";
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {isLoading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="mb-5">

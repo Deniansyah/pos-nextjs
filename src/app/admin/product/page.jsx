@@ -16,6 +16,7 @@ const ListProduct = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
   const [category, setCategory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [del, setDel] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
@@ -50,14 +51,17 @@ const ListProduct = () => {
   };
 
   const getCategory = async () => {
+    setIsLoading(true);
     const limit = 50
     try {
-      const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap()
+      const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
       setCategory(response);
     } catch (err) {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -220,7 +224,12 @@ const ListProduct = () => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {isLoading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center z-10">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="flex gap-5 mb-5 mr-4">

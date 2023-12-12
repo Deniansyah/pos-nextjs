@@ -43,10 +43,10 @@ const Landing = async () => {
     <div>
       <div className="navbar sticky top-0 bg-white z-20">
         <div className="navbar-start">
-          <a className="btn btn-ghost text-xl flex justify-center">
+          <Link href={"/"} className="btn btn-ghost text-xl flex justify-center">
             <Image src={logo} alt={"logo"} width={35} height={35} />
             <p>POS</p>
-          </a>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">

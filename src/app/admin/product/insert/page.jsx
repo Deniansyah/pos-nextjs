@@ -15,6 +15,7 @@ const InsertProduct = () => {
   const currentPath = pathname.split("/")[2];
   const [categoryDb, setCategoryDb] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState("");
   const [categories, setCategories] = useState("");
@@ -26,6 +27,7 @@ const InsertProduct = () => {
   }, []);
 
   const getCategory = async () => {
+    setIsLoading(true)
     const limit = 50;
     try {
       const response = await dispatch(categoriesAction.getCategoriesFiftyThunk(limit)).unwrap();
@@ -34,6 +36,8 @@ const InsertProduct = () => {
       alert(err.message);
       console.log(err);
       throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,7 +93,12 @@ const InsertProduct = () => {
   const isButtonDisabled = name === "" || price === "" || description === "" || categories === ""
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {isLoading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <form onSubmit={addProduct}>
         <div className="pl-24 my-5 w-screen">
