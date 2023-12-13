@@ -8,37 +8,36 @@ const PrivateRoute = (WrappedComponent, allowedRoles = []) => {
   const Wrapper = (props) => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const role = useSelector((state) => state.auth.role);
+    
     const token = useSelector((state) => state.auth.data);
+    try {
+      jwt_decode(token);
+    } catch (error) {
+      console.log(error);
+      redirect("/login");
+    }
 
     // Periksa apakah pengguna terautentikasi dan memiliki peran yang sesuai
     const isAllowed = isAuthenticated && allowedRoles.includes(role);
-
-    // Jika tidak terautentikasi, arahkan ke halaman login
+    
     useEffect(() => {
+      // Jika tidak terautentikasi, arahkan ke halaman login
       if (!isAuthenticated) {
-        redirect('/login');
-      }
-    }, [isAuthenticated]);
-
-    // Jika tidak diizinkan, arahkan ke halaman yang sesuai dengan peran
-    useEffect(() => {
-      try {
-        jwt_decode(token);
-        if (isAuthenticated && !isAllowed) {
-          if (role === 1) {
-            // Jika admin mengakses halaman cashier, arahkan ke halaman admin
-            redirect("/admin");
-          } 
-          if (role === 2) {
-            // Jika cashier mengakses halaman admin, arahkan ke halaman cashier
-            redirect("/cashier");
-          }
-        }
-      } catch (error) {
-        console.log(error);
         redirect("/login");
       }
-    }, [isAuthenticated, isAllowed, role, token]);
+
+      // Jika tidak diizinkan, arahkan ke halaman yang sesuai dengan peran
+      if (isAuthenticated && !isAllowed) {
+        if (role === 1) {
+          // Jika admin mengakses halaman cashier, arahkan ke halaman admin
+          redirect("/admin");
+        }
+        if (role === 2) {
+          // Jika cashier mengakses halaman admin, arahkan ke halaman cashier
+          redirect("/cashier");
+        }
+      }
+    }, [isAuthenticated, isAllowed, role]);
 
     // Render komponen terbungkus jika diizinkan, jika tidak, tampilkan null
     return isAllowed ? <WrappedComponent {...props} /> : null;
