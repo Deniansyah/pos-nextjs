@@ -28,7 +28,8 @@ const PrivateRoute = (WrappedComponent, allowedRoles = []) => {
           if (role === 1) {
             // Jika admin mengakses halaman cashier, arahkan ke halaman admin
             redirect("/admin");
-          } else if (role === 2) {
+          } 
+          if (role === 2) {
             // Jika cashier mengakses halaman admin, arahkan ke halaman cashier
             redirect("/cashier");
           }
@@ -37,7 +38,7 @@ const PrivateRoute = (WrappedComponent, allowedRoles = []) => {
         console.log(error);
         redirect("/login");
       }
-    }, [isAuthenticated, isAllowed, role]);
+    }, [isAuthenticated, isAllowed, role, token]);
 
     // Render komponen terbungkus jika diizinkan, jika tidak, tampilkan null
     return isAllowed ? <WrappedComponent {...props} /> : null;
