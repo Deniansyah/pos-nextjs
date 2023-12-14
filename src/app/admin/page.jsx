@@ -225,9 +225,18 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuDollarSign className="text-warning" />
               </span>
-              <div className={comparison > 0 ? "flex justify-center items-center text-green-500" : comparison < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
-                <p>{comparison > 0 ? `+${comparison.toFixed(2)}%` : comparison < 0 ? `${comparison.toFixed(2)}%` : "No changes"}</p>
-                {comparison > 0 ? <LuArrowUp /> : comparison < 0 ? <LuArrowDown /> : null}
+              <div
+                className={
+                  isFinite(comparison)
+                    ? comparison > 0
+                      ? "flex justify-center items-center text-green-500"
+                      : comparison < 0
+                      ? "flex justify-center items-center text-red-500"
+                      : "flex justify-center items-center"
+                    : "flex justify-center items-center"
+                }>
+                <p>{isFinite(comparison) ? (comparison > 0 ? `+${comparison.toFixed(2)}%` : comparison < 0 ? `${comparison.toFixed(2)}%` : "No changes") : "Start Counting"}</p>
+                {isFinite(comparison) ? comparison > 0 ? <LuArrowUp /> : comparison < 0 ? <LuArrowDown /> : null : null}
               </div>
             </div>
             <div>
@@ -242,9 +251,18 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuBookmarkMinus className="text-warning" />
               </span>
-              <div className={comparisonOrdered > 0 ? "flex justify-center items-center text-green-500" : comparisonOrdered < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
-                <p>{comparisonOrdered > 0 ? `+${comparisonOrdered.toFixed(2)}%` : comparisonOrdered < 0 ? `${comparisonOrdered.toFixed(2)}%` : "No changes"}</p>
-                {comparisonOrdered > 0 ? <LuArrowUp /> : comparisonOrdered < 0 ? <LuArrowDown /> : null}
+              <div
+                className={
+                  isFinite(comparisonOrdered)
+                    ? comparisonOrdered > 0
+                      ? "flex justify-center items-center text-green-500"
+                      : comparisonOrdered < 0
+                      ? "flex justify-center items-center text-red-500"
+                      : "flex justify-center items-center"
+                    : "flex justify-center items-center"
+                }>
+                <p>{isFinite(comparisonOrdered) ? (comparisonOrdered > 0 ? `+${comparisonOrdered.toFixed(2)}%` : comparisonOrdered < 0 ? `${comparisonOrdered.toFixed(2)}%` : "No changes") : "Start Counting"}</p>
+                {isFinite(comparisonOrdered) ? comparisonOrdered > 0 ? <LuArrowUp /> : comparisonOrdered < 0 ? <LuArrowDown /> : null : null}
               </div>
             </div>
             <div>
@@ -259,9 +277,18 @@ const Dashboard = () => {
               <span className="bg-orange-200 p-2 rounded-lg">
                 <LuUsers className="text-warning" />
               </span>
-              <div className={comparisonCustomers > 0 ? "flex justify-center items-center text-green-500" : comparisonCustomers < 0 ? "flex justify-center items-center text-red-500" : "flex justify-center items-center"}>
-                <p>{comparisonCustomers > 0 ? `+${comparisonCustomers.toFixed(2)}%` : comparisonCustomers < 0 ? `${comparisonCustomers.toFixed(2)}%` : "No changes"}</p>
-                {comparisonCustomers > 0 ? <LuArrowUp /> : comparisonCustomers < 0 ? <LuArrowDown /> : null}
+              <div
+                className={
+                  isFinite(comparisonCustomers)
+                    ? comparisonCustomers > 0
+                      ? "flex justify-center items-center text-green-500"
+                      : comparisonCustomers < 0
+                      ? "flex justify-center items-center text-red-500"
+                      : "flex justify-center items-center"
+                    : "flex justify-center items-center"
+                }>
+                <p>{isFinite(comparisonCustomers) ? (comparisonCustomers > 0 ? `+${comparisonCustomers.toFixed(2)}%` : comparisonCustomers < 0 ? `${comparisonCustomers.toFixed(2)}%` : "No changes") : "Start Counting"}</p>
+                {isFinite(comparisonCustomers) ? comparisonCustomers > 0 ? <LuArrowUp /> : comparisonCustomers < 0 ? <LuArrowDown /> : null : null}
               </div>
             </div>
             <div>

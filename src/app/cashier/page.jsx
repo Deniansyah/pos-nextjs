@@ -41,11 +41,14 @@ const CashierMain = () => {
   const data = product.data.results;
 
   useEffect(() => {
-    getCategory();
     setTotal(calculateTotal());
     updateDate();
     dispatch(productAction.getProductThunk(query));
   }, [dispatch, query, cart]);
+
+  useEffect(() => {
+    getCategory();
+  },[])
 
   const getCategory = async () => {
     setIsLoading(true)
