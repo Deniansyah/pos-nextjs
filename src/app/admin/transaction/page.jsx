@@ -12,6 +12,7 @@ import PrivateRoute from "../../../components/PrivateRoute";
 const ListTransaction = () => {
   const dispatch = useDispatch();
   const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
   const currentPath = pathname.split("/")[2];
   const [searchTerm, setSearchTerm] = useState("");
   const [query, setQuery] = useState({
@@ -29,8 +30,21 @@ const ListTransaction = () => {
   const data = transaction?.data?.results;
 
   useEffect(() => {
-    dispatch(transactionAction.getTransactionThunk(query));
+    getTransaction()
   }, [dispatch, query]);
+
+  const getTransaction = async () => {
+    setLoading(true);
+    try {
+      await dispatch(transactionAction.getTransactionThunk(query)).unwrap()
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Converter Rupiah
   const formatPrice = (price) => {
@@ -202,7 +216,12 @@ const ListTransaction = () => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {loading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center z-10">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <Sidebar path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="flex gap-5 mb-5 mr-4">

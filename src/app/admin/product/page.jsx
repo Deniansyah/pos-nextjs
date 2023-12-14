@@ -35,8 +35,21 @@ const ListProduct = () => {
   useEffect(() => {
     getCategory();
     setDel(false);
-    dispatch(productAction.getProductThunk(query));
+    getProduct()
   }, [dispatch, del, query]);
+
+  const getProduct = async () => {
+    setIsLoading(true);
+    try {
+      await dispatch(productAction.getProductThunk(query)).unwrap();
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const deleteProduct = async (id) => {
     try {

@@ -14,6 +14,7 @@ const ListTransaction = () => {
   const pathname = usePathname();
   const currentPath = pathname.split("/")[2];
   const [del, setDel] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [query, setQuery] = useState({
     page: 1,
@@ -30,9 +31,22 @@ const ListTransaction = () => {
   const data = transaction?.data?.results;
 
   useEffect(() => {
+    getTransaction()
     setDel(false);
-    dispatch(transactionAction.getTransactionThunk(query));
   }, [dispatch, del, query]);
+
+  const getTransaction = async () => {
+    setLoading(true);
+    try {
+      await dispatch(transactionAction.getTransactionThunk(query)).unwrap();
+    } catch (err) {
+      alert(err.message);
+      console.log(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const deleteTransaction = async (id) => {
     try {
@@ -217,7 +231,12 @@ const ListTransaction = () => {
   };
 
   return (
-    <div className="flex bg-gray-200 min-h-screen min-w-screen">
+    <div className="flex relative bg-gray-200 min-h-screen min-w-screen">
+      {loading ? (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-25 flex justify-center items-center z-10">
+          <span className="loading loading-spinner loading-lg text-warning"></span>
+        </div>
+      ) : null}
       <SidebarCashier path={currentPath} />
       <div className="pl-24 my-5 w-screen">
         <div className="flex gap-5 mb-5 mr-4">
